@@ -194,38 +194,33 @@ python_trading/
 2. ДЕТАЛЬНОЕ ОПИСАНИЕ КОМПОНЕНТОВ
 
 - src/ - Ядро системы
+   - data_feed/ - Получение данных с бирж:
+      - moex_client.py - Клиент MOEX API (стаканы, котировки)
+      - tinkoff_client*.py - Клиенты Tinkoff Invest API (боевой контур)
+      - orderbook.py - Универсальный клиент для стаканов
+      - utils/logger.py - Система логирования на базе loguru
 
-- data_feed/ - Получение данных с бирж:
-
-- moex_client.py - Клиент MOEX API (стаканы, котировки)
-- tinkoff_client*.py - Клиенты Tinkoff Invest API (боевой контур)
-- orderbook.py - Универсальный клиент для стаканов
-- utils/logger.py - Система логирования на базе loguru
 - telegram_bot/ - Telegram интерфейс
+   - bot.py - Главный файл бота, точка входа
+   - config.py - Конфигурация и состояние бота
+   - handlers/ - Обработчики команд:
+      - basic.py - /start, /help, /status
+      - settings.py - Настройки тикера, глубины, интервала
+      - orderbook.py - Работа со стаканами
+   - services/ - Бизнес-логика:
+      - tinkoff_service.py - Асинхронный сервис работы с Tinkoff API
+      - orderbook_service.py - Сервис получения стаканов
 
-- bot.py - Главный файл бота, точка входа
-- config.py - Конфигурация и состояние бота
-- handlers/ - Обработчики команд:
-
-- basic.py - /start, /help, /status
-- settings.py - Настройки тикера, глубины, интервала
-- orderbook.py - Работа со стаканами
-- services/ - Бизнес-логика:
-
-- tinkoff_service.py - Асинхронный сервис работы с Tinkoff API
-- orderbook_service.py - Сервис получения стаканов
 - scripts/ - Утилиты и скрипты
-
-- scanner_gazp.py - Скринер стакана Газпрома через MOEX
-- tinkoff_grpc_client_fixed.py - Быстрый gRPC клиент Tinkoff
-- tinkoff_scanner.py - Скринер через Tinkoff API (боевой контур)
+   - scanner_gazp.py - Скринер стакана Газпрома через MOEX
+   - tinkoff_grpc_client_fixed.py - Быстрый gRPC клиент Tinkoff
+   - tinkoff_scanner.py - Скринер через Tinkoff API (боевой контур)
+   
 - Управление и вспомогательные файлы
-
-- bot_control.sh - Скрипт управления ботом (старт/стоп/логи)
-- requirements.txt - Все зависимости Python
-- .env - Конфигурация окружения (токены, настройки)
-- create_monolithic_export.py - Создание монолитного экспорта проекта
-   ``
+   - bot_control.sh - Скрипт управления ботом (старт/стоп/логи)
+   - requirements.txt - Все зависимости Python
+   - .env - Конфигурация окружения (токены, настройки)
+   - create_monolithic_export.py - Создание монолитного экспорта проекта
 
 3. ПОТОК ДАННЫХ:
 
