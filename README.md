@@ -69,26 +69,28 @@
 
 2. ДОБАВЬТЕ СЛЕДУЮЩИЕ ПЕРЕМЕННЫЕ:
 
-   ```bash
-
    - Tinkoff Invest API токен (получить в кабинете Tinkoff)
+   ```bash 
    INVEST_TOKEN=ваш_токен_сюда
-
+   ```
    - Режим работы (sandbox или real)
+   ```bash 
    SANDBOX=true
-
+   ```
    - Настройки Telegram бота
+   ```bash 
    TELEGRAM_BOT_TOKEN=ваш_токен_бота_сюда
    TELEGRAM_CHAT_ID=ваш_chat_id_сюда
-
+   ```
    - Настройки по умолчанию
+   ```bash 
    DEFAULT_TICKER=SBER
    DEFAULT_DEPTH=5
    DEFAULT_INTERVAL=10
    LOG_LEVEL=INFO
    LOG_TO_FILE=true
    MOEX_TIMEOUT=10
-
+   ```
 
 3. КАК ПОЛУЧИТЬ ТОКЕНЫ:
 
