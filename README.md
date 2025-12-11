@@ -69,11 +69,10 @@
 
 2. ДОБАВЬТЕ СЛЕДУЮЩИЕ ПЕРЕМЕННЫЕ:
 
-env
+   ```env
 
 - Tinkoff Invest API токен (получить в кабинете Tinkoff)
 INVEST_TOKEN=ваш_токен_сюда
-...
 
 - Режим работы (sandbox или real)
 SANDBOX=true
@@ -89,6 +88,8 @@ DEFAULT_INTERVAL=10
 LOG_LEVEL=INFO
 LOG_TO_FILE=true
 MOEX_TIMEOUT=10
+
+ ``
 
 3. КАК ПОЛУЧИТЬ ТОКЕНЫ:
 
@@ -181,6 +182,7 @@ python_trading/
 ├── data/                  # Исторические данные
 ├── logs/                  # Логи работы системы
 └── project_utils/         # Утилиты управления проектом
+   ``
 
 2. ДЕТАЛЬНОЕ ОПИСАНИЕ КОМПОНЕНТОВ
 
@@ -217,7 +219,7 @@ bot_control.sh - Скрипт управления ботом (старт/сто
 requirements.txt - Все зависимости Python
 .env - Конфигурация окружения (токены, настройки)
 create_monolithic_export.py - Создание монолитного экспорта проекта
-   
+   ``
 
 3. ПОТОК ДАННЫХ:
 
@@ -239,7 +241,7 @@ telegram_bot/services/
 Форматирование для Telegram
         ↓
    Отправка пользователю
-
+   ``
 
 4. КОНФИГУРАЦИОННЫЕ УРОВНИ
 
