@@ -71,23 +71,23 @@
 
    ```bash
 
-- Tinkoff Invest API токен (получить в кабинете Tinkoff)
-INVEST_TOKEN=ваш_токен_сюда
+   - Tinkoff Invest API токен (получить в кабинете Tinkoff)
+   INVEST_TOKEN=ваш_токен_сюда
 
-- Режим работы (sandbox или real)
-SANDBOX=true
+   - Режим работы (sandbox или real)
+   SANDBOX=true
 
-- Настройки Telegram бота
-TELEGRAM_BOT_TOKEN=ваш_токен_бота_сюда
-TELEGRAM_CHAT_ID=ваш_chat_id_сюда
+   - Настройки Telegram бота
+   TELEGRAM_BOT_TOKEN=ваш_токен_бота_сюда
+   TELEGRAM_CHAT_ID=ваш_chat_id_сюда
 
-- Настройки по умолчанию
-DEFAULT_TICKER=SBER
-DEFAULT_DEPTH=5
-DEFAULT_INTERVAL=10
-LOG_LEVEL=INFO
-LOG_TO_FILE=true
-MOEX_TIMEOUT=10
+   - Настройки по умолчанию
+   DEFAULT_TICKER=SBER
+   DEFAULT_DEPTH=5
+   DEFAULT_INTERVAL=10
+   LOG_LEVEL=INFO
+   LOG_TO_FILE=true
+   MOEX_TIMEOUT=10
 
 
 3. КАК ПОЛУЧИТЬ ТОКЕНЫ:
