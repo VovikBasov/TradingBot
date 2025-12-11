@@ -69,7 +69,7 @@
 
 2. ДОБАВЬТЕ СЛЕДУЮЩИЕ ПЕРЕМЕННЫЕ:
 
-   ```env
+   ```bash
 
 - Tinkoff Invest API токен (получить в кабинете Tinkoff)
 INVEST_TOKEN=ваш_токен_сюда
@@ -89,7 +89,6 @@ LOG_LEVEL=INFO
 LOG_TO_FILE=true
 MOEX_TIMEOUT=10
 
- ``
 
 3. КАК ПОЛУЧИТЬ ТОКЕНЫ:
 
