@@ -72,6 +72,7 @@
    - Tinkoff Invest API токен (получить в кабинете Tinkoff)
 
    ```bash 
+   
    INVEST_TOKEN=ваш_токен_сюда
    ```
    - Режим работы (sandbox или real)
@@ -86,7 +87,7 @@
    TELEGRAM_CHAT_ID=ваш_chat_id_сюда
    ```
    - Настройки по умолчанию
-   
+
    ```bash 
    DEFAULT_TICKER=SBER
    DEFAULT_DEPTH=5
