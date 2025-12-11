@@ -1,0 +1,3806 @@
+
+================================================================================
+МОНОЛИТНЫЙ ЭКСПОРТ ПРОЕКТА: python_trading
+================================================================================
+
+📅 Дата экспорта: 2025-12-12 00:59:10
+📁 Корневая папка: /Users/vladimirbasov/Desktop/python_trading
+👤 Экспортёр: MonolithicProjectExporter v1.0
+
+================================================================================
+ПРИМЕЧАНИЯ:
+1. Файлы разделены заголовками с '======'
+2. Чувствительные данные (токены, ключи) заменены на [SECRET_REMOVED]
+3. Бинарные файлы пропущены, только их метаданные
+4. Все пути указаны относительно корня проекта
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: .env
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/.env
+================================================================================
+
+# Tinkoff Invest API
+INVEST_TOKEN=[SECRET_REMOVED]
+
+# Режим работы (sandbox или real)
+SANDBOX=true
+
+# Настройки для ТГ бота - @trading_monitor_VB_bot
+TELEGRAM_BOT_TOKEN=[SECRET_REMOVED]
+TELEGRAM_CHAT_ID=162853294
+
+# Прочие переменные
+DEFAULT_TICKER=SBER
+DEFAULT_DEPTH=5
+DEFAULT_INTERVAL=10
+LOG_LEVEL=INFO
+LOG_TO_FILE=true
+MOEX_TIMEOUT=10
+ENCRYPT_TOKENS=false
+
+
+# Можно добавить account_id, если знаете
+# ACCOUNT_ID=your_account_id
+
+
+
+================================================================================
+ФАЙЛ: .gitignore
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/.gitignore
+================================================================================
+
+# Virtual environment
+trading_env/
+
+# Environment variables
+.env
+.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data files
+*.csv
+*.json
+*.pkl
+*.feather
+*.parquet
+data/
+
+# Jupyter
+.ipynb_checkpoints
+
+# OS
+.DS_Store
+Thumbs.db
+
+
+================================================================================
+ФАЙЛ: PROJECT_FULL_EXPORT_20251212_005910.txt
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/PROJECT_FULL_EXPORT_20251212_005910.txt
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: README.md
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/README.md
+================================================================================
+
+# Python Trading Bot
+
+Торговый робот для автоматической торговли на российских биржах (MOEX) через Tinkoff Invest API.
+
+## 📁 Структура проекта
+
+### Основные папки:
+- **`src/`** - исходный код проекта
+  - **`data_feed/`** - модули получения рыночных данных (стаканы, котировки)
+  - **`strategies/`** - торговые стратегии (пока пусто)
+  - **`execution/`** - модули исполнения заявок (пока пусто)  
+  - **`risk_management/`** - управление рисками (пока пусто)
+  - **`utils/`** - вспомогательные утилиты (логгирование)
+
+- **`tests/`** - тесты проекта
+- **`scripts/`** - полезные скрипты (скринеры, экспорт данных)
+- **`project_utils/`** - утилиты управления проектом (экспорт/импорт)
+- **`config/`** - конфигурационные файлы
+- **`notebooks/`** - Jupyter ноутбуки для анализа
+- **`data/`** - данные (исторические котировки)
+- **`logs/`** - логи работы
+
+## 🚀 Быстрый старт
+
+### 1. Настройка окружения
+```bash
+# Создание виртуального окружения
+python -m venv trading_env
+
+# Активация (Linux/Mac)
+source trading_env/bin/activate
+
+# Активация (Windows)  
+trading_env\Scripts\activate
+
+# Установка зависимостей
+pip install -r requirements.txt
+2. Настройка API
+
+Создайте файл .env на основе .env.example:
+
+env
+INVEST_TOKEN=your_tinkoff_invest_token_here
+SANDBOX=true
+3. Проверка установки
+
+bash
+python test_setup.py
+🔧 Утилиты проекта
+
+Экспорт проекта
+
+bash
+python project_utils/export_project.py
+Создает JSON файл со всей структурой проекта.
+
+Импорт проекта
+
+bash
+python project_utils/import_project.py project_export_YYYYMMDD_HHMMSS.json
+Разворачивает проект из файла экспорта.
+
+📊 Функциональность
+
+Работающие модули:
+
+✅ Получение стаканов с MOEX
+✅ Работа с Tinkoff Invest API (боевой контур)
+✅ Скринеры в реальном времени
+✅ Выгрузка исторических данных
+✅ Логирование и конфигурация
+В разработке:
+
+🔄 Торговые стратегии
+🔄 Исполнение заявок
+🔄 Управление рисками
+🔄 Бэктестинг
+🛠 Технологии
+
+Python 3.8+
+Tinkoff Invest API
+MOEX ISS API
+pandas, numpy для анализа
+backtrader для бэктестинга
+loguru для логирования
+📈 Примеры использования
+
+Запуск скринера стаканов:
+
+bash
+python scripts/scanner_gazp.py
+Тест Tinkoff API:
+
+bash
+python test_tinkoff_simple.py
+⚠️ Важно
+
+Проект в активной разработке
+Торговля сопряжена с рисками
+Всегда тестируйте в sandbox режиме
+Сохраняйте бэкапы конфигурации
+
+
+================================================================================
+ФАЙЛ: README_NEW.md
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/README_NEW.md
+================================================================================
+
+# Python Trading Bot
+
+## 🎯 ОПИСАНИЕ ПРОЕКТА
+
+Торговый бот с **Telegram-интерфейсом** для работы с российскими биржами (MOEX) через Tinkoff Invest API. Проект позволяет получать стаканы заявок в реальном времени, настраивать параметры мониторинга и управлять процессом через удобные команды в Telegram.
+
+**Основные возможности:**
+- 📊 Получение стаканов с MOEX и Tinkoff Invest API
+- 🤖 Управление через Telegram бота (@trading_monitor_VB_bot)
+- ⚡ Режим реального времени и мониторинг с настраиваемым интервалом
+- 🔧 Гибкая настройка тикеров, глубины стакана и частоты обновлений
+- 📈 Скрипты для анализа рынка и экспорта данных
+
+Проект находится в активной разработке, текущая версия сосредоточена на получении рыночных данных и предоставлении удобного интерфейса через Telegram.
+
+
+================================================================================
+ФАЙЛ: bot_control.sh
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/bot_control.sh
+================================================================================
+
+#!/bin/bash
+
+case "$1" in
+    start)
+        echo "🚀 Запускаем бота..."
+        cd /Users/vladimirbasov/Desktop/python_trading
+        source trading_env/bin/activate
+        python telegram_bot/bot.py
+        ;;
+    stop)
+        echo "⏹️  Останавливаем бота..."
+        pkill -f "telegram_bot/bot.py"
+        ;;
+    status)
+        echo "📊 Статус бота:"
+        if pgrep -f "telegram_bot/bot.py" > /dev/null; then
+            echo "✅ Бот запущен"
+            ps aux | grep "telegram_bot/bot.py" | grep -v grep
+        else
+            echo "❌ Бот не запущен"
+        fi
+        ;;
+    logs)
+        echo "📋 Логи бота:"
+        tail -50 logs/trading_bot.log
+        ;;
+    *)
+        echo "Использование: $0 {start|stop|status|logs}"
+        ;;
+esac
+
+
+================================================================================
+ФАЙЛ: check_install.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/check_install.py
+================================================================================
+
+print("🔍 Проверяем установку основных библиотек...")
+
+libs_to_check = [
+    "pandas", "numpy", "requests", "ccxt", 
+    "moexalex", "backtrader", "loguru", "python-dotenv"
+]
+
+for lib in libs_to_check:
+    try:
+        __import__(lib)
+        print(f"✅ {lib}")
+    except ImportError as e:
+        print(f"❌ {lib}: {e}")
+
+print("\n📊 Проверка версий:")
+import pandas as pd
+import numpy as np
+import ccxt
+
+print(f"Pandas: {pd.__version__}")
+print(f"Numpy: {np.__version__}")
+print(f"CCXT: {ccxt.__version__}")
+
+print("\n🎯 Базовая проверка завершена!")
+
+
+================================================================================
+ФАЙЛ: check_project_structure.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/check_project_structure.py
+================================================================================
+
+import os
+import sys
+
+def check_structure():
+    print("🔍 Проверяем структуру проекта...")
+    
+    # Ожидаемая структура из первого сообщения
+    expected_dirs = [
+        'src',
+        'src/data_feed', 
+        'src/strategies',
+        'src/execution',
+        'src/risk_management',
+        'src/utils',
+        'tests',
+        'config',
+        'notebooks',
+        'scripts',
+        'data',
+        'logs'
+    ]
+    
+    expected_files = [
+        'src/__init__.py',
+        'src/data_feed/__init__.py',
+        'src/strategies/__init__.py', 
+        'src/execution/__init__.py',
+        'src/risk_management/__init__.py',
+        'src/utils/__init__.py',
+        'tests/__init__.py',
+        'requirements.txt',
+        '.env'
+    ]
+    
+    missing_dirs = []
+    missing_files = []
+    
+    # Проверяем папки
+    for dir_path in expected_dirs:
+        if not os.path.exists(dir_path):
+            missing_dirs.append(dir_path)
+        else:
+            print(f"✅ Папка: {dir_path}")
+    
+    # Проверяем файлы
+    for file_path in expected_files:
+        if not os.path.exists(file_path):
+            missing_files.append(file_path)
+        else:
+            print(f"✅ Файл: {file_path}")
+    
+    # Выводим отсутствующие элементы
+    if missing_dirs:
+        print("\n❌ Отсутствующие папки:")
+        for dir_path in missing_dirs:
+            print(f"   - {dir_path}")
+    
+    if missing_files:
+        print("\n❌ Отсутствующие файлы:")
+        for file_path in missing_files:
+            print(f"   - {file_path}")
+    
+    if not missing_dirs and not missing_files:
+        print("\n🎉 Вся структура проекта создана!")
+    else:
+        print(f"\n📝 Необходимо создать: {len(missing_dirs)} папок, {len(missing_files)} файлов")
+
+if __name__ == "__main__":
+    check_structure()
+
+
+================================================================================
+ФАЙЛ: create_monolithic_export.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/create_monolithic_export.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Создаёт монолитный файл со всем кодом проекта
+Запуск: python create_monolithic_export.py [путь_к_проекту]
+"""
+
+import os
+import sys
+from pathlib import Path
+from datetime import datetime
+
+class MonolithicProjectExporter:
+    def __init__(self, project_root="."):
+        self.project_root = Path(project_root).resolve()
+        self.output_file = None
+        self.file_count = 0
+        self.total_size = 0
+        
+        # Папки для исключения (рекурсивно)
+        self.exclude_dirs = {
+            '.git', '__pycache__', '.pytest_cache', '.mypy_cache',
+            'trading_env', 'venv', '.venv', 'env', 'virtualenv',
+            'node_modules', '.vscode', '.idea', 'logs', 'data',
+            'build', 'dist', '.eggs', '*.egg-info'
+        }
+        
+        # Файлы для исключения
+        self.exclude_files = {
+            '.DS_Store', 'Thumbs.db', 'desktop.ini',
+            '*.pyc', '*.pyo', '*.pyd', '*.so', '*.dll',
+            '*.log', '*.tmp', '*.temp', '.coverage',
+            '*.db', '*.sqlite', '*.db-journal'
+        }
+        
+        # Расширения файлов, которые мы хотим включить (можно добавлять)
+        self.include_extensions = {
+            '.py', '.txt', '.md', '.json', '.yaml', '.yml',
+            '.toml', '.ini', '.cfg', '.env', '.sh', '.bat',
+            '.html', '.css', '.js', '.ts', '.sql', '.csv'
+        }
+        
+    def should_include(self, path: Path) -> bool:
+        """Определяем, нужно ли включать файл"""
+        # Проверяем папки
+        if path.is_dir():
+            return path.name not in self.exclude_dirs and not any(
+                path.match(pattern) for pattern in self.exclude_dirs if '*' in pattern
+            )
+        
+        # Проверяем файлы
+        if any(path.match(pattern) for pattern in self.exclude_files):
+            return False
+            
+        # Проверяем расширения (если есть расширение)
+        if path.suffix:
+            return path.suffix in self.include_extensions
+        
+        # Файлы без расширения проверяем по имени
+        if path.name in ['.env', '.gitignore', 'Dockerfile', 'docker-compose.yml']:
+            return True
+            
+        return False
+    
+    def sanitize_content(self, content: str, file_path: Path) -> str:
+        """Очищаем чувствительные данные"""
+        relative_path = str(file_path.relative_to(self.project_root))
+        
+        if file_path.name == '.env':
+            lines = content.split('\n')
+            cleaned_lines = []
+            for line in lines:
+                if any(keyword in line.upper() for keyword in 
+                       ['TOKEN=', 'KEY=', 'SECRET=', 'PASSWORD=', 'API_']):
+                    if '=' in line:
+                        key = line.split('=')[0].strip()
+                        cleaned_lines.append(f"{key}=[SECRET_REMOVED]")
+                    else:
+                        cleaned_lines.append(line)
+                else:
+                    cleaned_lines.append(line)
+            return '\n'.join(cleaned_lines)
+        
+        return content
+    
+    def write_file_header(self, file_path: Path, relative_path: str):
+        """Записываем заголовок файла"""
+        separator = "=" * 80
+        self.output_file.write(f"\n\n{separator}\n")
+        self.output_file.write(f"ФАЙЛ: {relative_path}\n")
+        self.output_file.write(f"ПОЛНЫЙ ПУТЬ: {file_path}\n")
+        self.output_file.write(f"{separator}\n\n")
+    
+    def process_file(self, file_path: Path):
+        """Обрабатываем один файл"""
+        try:
+            relative_path = str(file_path.relative_to(self.project_root))
+            
+            # Пишем заголовок
+            self.write_file_header(file_path, relative_path)
+            
+            # Читаем и обрабатываем содержимое
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                
+                # Очищаем чувствительные данные
+                content = self.sanitize_content(content, file_path)
+                
+                # Записываем содержимое
+                self.output_file.write(content)
+                
+                # Обновляем статистику
+                self.file_count += 1
+                self.total_size += len(content)
+                
+                print(f"✅ Добавлен: {relative_path} ({len(content)} байт)")
+                
+            except UnicodeDecodeError:
+                # Пробуем другие кодировки
+                try:
+                    with open(file_path, 'r', encoding='latin-1') as f:
+                        content = f.read()
+                    self.output_file.write(f"# Файл в кодировке latin-1\n{content}")
+                    self.file_count += 1
+                except:
+                    self.output_file.write(f"# Не удалось прочитать файл как текст (бинарный файл)\n")
+                    self.output_file.write(f"# Размер: {file_path.stat().st_size} байт\n")
+                    
+        except Exception as e:
+            print(f"⚠️  Ошибка обработки {file_path}: {e}")
+    
+    def export_project(self, output_filename=None):
+        """Основная функция экспорта"""
+        if not output_filename:
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            output_filename = self.project_root / f"PROJECT_FULL_EXPORT_{timestamp}.txt"
+        
+        print(f"\n🚀 Начинаем монолитный экспорт проекта")
+        print(f"📁 Корневая папка: {self.project_root}")
+        print(f"💾 Выходной файл: {output_filename}")
+        print("=" * 60)
+        
+        try:
+            self.output_file = open(output_filename, 'w', encoding='utf-8')
+            
+            # Записываем заголовок экспорта
+            self.write_export_header()
+            
+            # Рекурсивно обходим все файлы
+            for root, dirs, files in os.walk(self.project_root):
+                # Преобразуем root в Path
+                root_path = Path(root)
+                
+                # Фильтруем папки
+                dirs[:] = [d for d in dirs if self.should_include(root_path / d)]
+                
+                # Сортируем для консистентности
+                dirs.sort()
+                files.sort()
+                
+                for file in files:
+                    file_path = root_path / file
+                    if self.should_include(file_path):
+                        self.process_file(file_path)
+            
+            # Записываем статистику
+            self.write_statistics()
+            
+            # Закрываем файл
+            self.output_file.close()
+            
+            print("\n" + "=" * 60)
+            print(f"🎉 ЭКСПОРТ ЗАВЕРШЁН!")
+            print(f"📊 Файлов экспортировано: {self.file_count}")
+            print(f"📦 Общий размер кода: {self.total_size / 1024:.1f} КБ")
+            print(f"💾 Итоговый файл: {output_filename}")
+            print(f"📏 Размер файла: {output_filename.stat().st_size / 1024 / 1024:.2f} МБ")
+            print("=" * 60)
+            
+            return output_filename
+            
+        except Exception as e:
+            print(f"❌ Критическая ошибка: {e}")
+            if self.output_file:
+                self.output_file.close()
+            return None
+    
+    def write_export_header(self):
+        """Записываем заголовок экспорта"""
+        header = f"""
+{'=' * 80}
+МОНОЛИТНЫЙ ЭКСПОРТ ПРОЕКТА: {self.project_root.name}
+{'=' * 80}
+
+📅 Дата экспорта: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+📁 Корневая папка: {self.project_root}
+👤 Экспортёр: MonolithicProjectExporter v1.0
+
+{'=' * 80}
+ПРИМЕЧАНИЯ:
+1. Файлы разделены заголовками с '======'
+2. Чувствительные данные (токены, ключи) заменены на [SECRET_REMOVED]
+3. Бинарные файлы пропущены, только их метаданные
+4. Все пути указаны относительно корня проекта
+{'=' * 80}
+
+"""
+        self.output_file.write(header)
+    
+    def write_statistics(self):
+        """Записываем статистику в конец файла"""
+        stats = f"""
+
+{'=' * 80}
+📊 СТАТИСТИКА ЭКСПОРТА
+{'=' * 80}
+Всего файлов: {self.file_count}
+Общий размер кода: {self.total_size} байт ({self.total_size / 1024:.1f} КБ)
+Дата экспорта: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+{'=' * 80}
+
+🎯 ИНСТРУКЦИЯ ДЛЯ АНАЛИЗА:
+1. Ищите конкретные файлы по строке "ФАЙЛ: "
+2. Все пути указаны относительно: {self.project_root}
+3. Для навигации используйте поиск по имени файла
+4. .env файлы очищены от секретов
+
+{'=' * 80}
+КОНЕЦ ЭКСПОРТА
+{'=' * 80}
+"""
+        self.output_file.write(stats)
+
+
+def main():
+    """Точка входа"""
+    print("🔧 Monolithic Project Exporter v1.0")
+    print("Создаёт единый файл со всем кодом проекта")
+    print("=" * 60)
+    
+    # Определяем путь к проекту
+    if len(sys.argv) > 1:
+        project_path = sys.argv[1]
+        if not os.path.exists(project_path):
+            print(f"❌ Путь не существует: {project_path}")
+            return
+    else:
+        project_path = "."
+    
+    # Создаём экспортёр и запускаем
+    exporter = MonolithicProjectExporter(project_path)
+    
+    # Можно указать конкретное имя файла вторым аргументом
+    output_file = None
+    if len(sys.argv) > 2:
+        output_file = Path(sys.argv[2])
+    
+    result = exporter.export_project(output_file)
+    
+    if result:
+        print(f"\n✅ Экспорт успешно создан: {result}")
+        print("\n📋 Быстрые команды для анализа:")
+        print(f"   Просмотр: type {result} | more")
+        print(f"   Поиск файла: findstr /n \"ФАЙЛ: main.py\" {result}")
+        print(f"   Подсчёт строк: find /c /v \"\" {result}")
+    else:
+        print("❌ Не удалось создать экспорт")
+
+if __name__ == "__main__":
+    main()
+
+================================================================================
+ФАЙЛ: debug_imports.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/debug_imports.py
+================================================================================
+
+import sys
+import os
+
+print("🔧 Debug путей Python:")
+print(f"Текущая папка: {os.getcwd()}")
+print(f"Пути Python:")
+for path in sys.path:
+    print(f"  - {path}")
+
+print(f"\n📁 Содержимое src/utils/:")
+try:
+    print(os.listdir("src/utils"))
+except Exception as e:
+    print(f"Ошибка: {e}")
+
+print(f"\n📁 Содержимое src/data_feed/:")
+try:
+    print(os.listdir("src/data_feed"))
+except Exception as e:
+    print(f"Ошибка: {e}")
+
+# Прямой импорт
+print(f"\n🔄 Прямой импорт...")
+try:
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("logger", "src/utils/logger.py")
+    logger_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(logger_module)
+    print("✅ Прямой импорт logger.py - УСПЕХ")
+except Exception as e:
+    print(f"❌ Прямой импорт logger.py: {e}")
+
+
+================================================================================
+ФАЙЛ: debug_installation.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/debug_installation.py
+================================================================================
+
+import sys
+print("Python путь:", sys.executable)
+print("Версия Python:", sys.version)
+
+try:
+    import pip
+    installed_packages = [p.key for p in pip.get_installed_distributions()]
+    print("Установленные пакеты содержащие 'tinkoff':", 
+          [p for p in installed_packages if 'tinkoff' in p])
+except:
+    pass
+
+# Проверим доступные модули
+import pkgutil
+all_modules = [name for importer, name, ispkg in pkgutil.iter_modules()]
+print("Доступные модули:", [m for m in all_modules if 'tinkoff' in m or 'invest' in m])
+
+
+================================================================================
+ФАЙЛ: main.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/main.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Главный файл trading бота
+"""
+
+import sys
+import os
+
+# Добавляем src в путь Python
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+from utils.logger import log
+from data_feed.moex_client import MOEXClient
+
+def main():
+    """Основная функция"""
+    log.info("🚀 Запускаем trading бот...")
+    
+    # Тестируем компоненты
+    client = MOEXClient()
+    
+    # Получаем данные по SBER
+    sber_info = client.get_security_info("SBER")
+    if sber_info:
+        log.info("✅ MOEX API работает")
+    
+    log.info("🎯 Trading бот готов к работе!")
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+ФАЙЛ: moex_direct.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/moex_direct.py
+================================================================================
+
+import requests
+import pandas as pd
+from loguru import logger
+
+class MOEXClient:
+    def __init__(self):
+        self.base_url = "https://iss.moex.com/iss"
+        self.session = requests.Session()
+        logger.info("MOEX клиент инициализирован")
+    
+    def get_security_info(self, ticker):
+        """Получить информацию о бумаге"""
+        url = f"{self.base_url}/securities/{ticker}.json"
+        try:
+            response = self.session.get(url)
+            response.raise_for_status()
+            data = response.json()
+            logger.info(f"Данные по {ticker} получены")
+            return data
+        except Exception as e:
+            logger.error(f"Ошибка получения данных по {ticker}: {e}")
+            return None
+    
+    def get_current_price(self, ticker):
+        """Получить текущую цену (упрощённо)"""
+        url = f"{self.base_url}/engines/stock/markets/shares/boards/TQBR/securities/{ticker}.json"
+        try:
+            response = self.session.get(url)
+            data = response.json()
+            # Извлекаем последнюю цену из рыночных данных
+            market_data = data['marketdata']['data']
+            if market_data:
+                last_price = market_data[0][12]  # LAST цена
+                return last_price
+            return None
+        except Exception as e:
+            logger.error(f"Ошибка получения цены {ticker}: {e}")
+            return None
+
+if __name__ == "__main__":
+    client = MOEXClient()
+    
+    # Тестируем получение данных по SBER
+    sber_info = client.get_security_info("SBER")
+    if sber_info:
+        print("✅ Данные SBER получены")
+    
+    sber_price = client.get_current_price("SBER")
+    if sber_price:
+        print(f"✅ Цена SBER: {sber_price}")
+
+
+================================================================================
+ФАЙЛ: requirements.txt
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/requirements.txt
+================================================================================
+
+aiodns==3.5.0
+aiohappyeyeballs==2.6.1
+aiohttp==3.13.2
+aiosignal==1.4.0
+annotated-types==0.7.0
+anyio==4.12.0
+attrs==25.4.0
+backtrader==1.9.78.123
+cachetools==5.5.2
+ccxt==4.5.19
+certifi==2025.11.12
+cffi==2.0.0
+charset-normalizer==3.4.4
+coincurve==21.0.0
+contourpy==1.3.3
+cryptography==46.0.3
+cycler==0.12.1
+dateparser==1.2.2
+deprecation==2.1.0
+fonttools==4.60.1
+frozenlist==1.8.0
+grpcio==1.76.0
+h11==0.16.0
+httpcore==1.0.9
+httpx==0.28.1
+idna==3.11
+iso8601==2.1.0
+joblib==1.5.2
+kiwisolver==1.4.9
+loguru==0.7.3
+matplotlib==3.10.7
+multidict==6.7.0
+narwhals==2.11.0
+numpy==2.3.4
+packaging==25.0
+pandas==2.3.3
+pillow==12.0.0
+plotly==6.4.0
+prettytable==3.17.0
+propcache==0.4.1
+protobuf==4.25.8
+pycares==4.11.0
+pycparser==2.23
+pycryptodome==3.23.0
+pydantic==2.12.4
+pydantic_core==2.41.5
+pyparsing==3.2.5
+python-binance==1.0.32
+python-dateutil==2.9.0.post0
+python-dotenv==1.2.1
+python-telegram-bot==22.5
+pytz==2025.2
+regex==2025.11.3
+requests==2.32.5
+scikit-learn==1.7.2
+scipy==1.16.3
+seaborn==0.13.2
+six==1.17.0
+threadpoolctl==3.6.0
+tinkoff==0.1.1
+tinkoff-investments==0.2.0b117
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+tzdata==2025.2
+tzlocal==5.3.1
+ujson==5.11.0
+urllib3==2.5.0
+wcwidth==0.2.14
+websocket-client==1.9.0
+websockets==15.0.1
+yarl==1.22.0
+
+
+================================================================================
+ФАЙЛ: testGit.txt
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/testGit.txt
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: project_utils/export_project.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/project_utils/export_project.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Скрипт для выгрузки текущего состояния проекта в один файл
+Запуск: python project_utils/export_project.py
+"""
+
+import os
+import json
+import base64
+from datetime import datetime
+
+def export_project():
+    """Экспортирует весь проект в один JSON файл"""
+    print("📤 Выгружаем текущее состояние проекта...")
+    
+    project_data = {
+        "export_date": datetime.now().isoformat(),
+        "project_name": "Python Trading Bot",
+        "files": {}
+    }
+    
+    # Исключаемые папки и файлы
+    exclude_dirs = {'.git', '__pycache__', 'trading_env', 'data', 'logs'}
+    exclude_files = {'.DS_Store'}
+    
+    # Собираем все файлы проекта
+    for root, dirs, files in os.walk("."):
+        # Исключаем системные папки
+        dirs[:] = [d for d in dirs if d not in exclude_dirs]
+        
+        for file in files:
+            if file in exclude_files:
+                continue
+                
+            file_path = os.path.join(root, file)
+            relative_path = file_path[2:]  # убираем ./
+            
+            # Пропускаем сам скрипт экспорта
+            if "project_utils/export_project.py" in relative_path:
+                continue
+                
+            try:
+                with open(file_path, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                
+                # Для .env файла заменяем токен на placeholder
+                if file == '.env':
+                    lines = content.split('\n')
+                    new_lines = []
+                    for line in lines:
+                        if line.startswith('INVEST_TOKEN='):
+                            new_lines.append('INVEST_TOKEN=Введите ваш токен')
+                        else:
+                            new_lines.append(line)
+                    content = '\n'.join(new_lines)
+                
+                project_data["files"][relative_path] = {
+                    "content": content,
+                    "size": len(content),
+                    "encoding": "utf-8"
+                }
+                
+                print(f"✅ Добавлен: {relative_path}")
+                
+            except Exception as e:
+                print(f"⚠️  Ошибка чтения {relative_path}: {e}")
+                project_data["files"][relative_path] = {
+                    "content": f"# Ошибка чтения файла: {e}",
+                    "size": 0,
+                    "error": str(e)
+                }
+    
+    # Сохраняем в файл
+    output_filename = f"project_export_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    
+    try:
+        with open(output_filename, 'w', encoding='utf-8') as f:
+            json.dump(project_data, f, indent=2, ensure_ascii=False)
+        
+        file_size = os.path.getsize(output_filename) / 1024 / 1024
+        print(f"\n🎉 Проект экспортирован в: {output_filename}")
+        print(f"📊 Размер файла: {file_size:.2f} MB")
+        print(f"📁 Файлов в экспорте: {len(project_data['files'])}")
+        print("\n📋 Содержимое проекта:")
+        
+        # Выводим структуру
+        for file_path in sorted(project_data["files"].keys()):
+            file_info = project_data["files"][file_path]
+            print(f"  - {file_path} ({file_info['size']} байт)")
+            
+        return True
+        
+    except Exception as e:
+        print(f"❌ Ошибка сохранения экспорта: {e}")
+        return False
+
+def main():
+    """Основная функция"""
+    print("🚀 Trading Bot Project Exporter")
+    print("=" * 50)
+    print("Экспортирует текущее состояние проекта в один JSON файл")
+    print("Токен API заменяется на 'Введите ваш токен'")
+    print("=" * 50)
+    
+    success = export_project()
+    
+    if success:
+        print("\n✅ Экспорт завершен!")
+        print("💡 Передайте JSON файл для анализа структуры проекта")
+    else:
+        print("\n❌ Ошибка при экспорте проекта")
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+ФАЙЛ: scripts/__init__.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/scripts/__init__.py
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: scripts/scanner_gazp.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/scripts/scanner_gazp.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Скринер стакана по Газпрому
+Запуск: python scripts/scanner_gazp.py
+"""
+
+import sys
+import os
+import time
+
+# Добавляем src в путь Python
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from data_feed.orderbook import MOEXOrderbook
+from utils.logger import log
+
+def main():
+    """Основная функция скринера"""
+    log.info("🚀 Запускаем скринер стакана...")
+    
+    client = MOEXOrderbook()
+    
+    # Сначала тестируем на SBER (он всегда торгуется)
+    log.info("Тестируем подключение на SBER...")
+    test_orderbook = client.get_orderbook("SBER")
+    if test_orderbook and ('bids' in test_orderbook or 'asks' in test_orderbook):
+        log.info("✅ Подключение к MOEX работает")
+    else:
+        log.error("❌ Проблема с подключением к MOEX")
+        return
+    
+    try:
+        while True:
+            # Очищаем консоль
+            os.system('clear' if os.name == 'posix' else 'cls')
+            
+            print("🎯 СКРИНЕР СТАКАНА - ГАЗПРОМ (GAZP)")
+            print("Для остановки нажмите Ctrl+C\n")
+            
+            # Получаем и выводим стакан
+            client.print_pretty_orderbook("GAZP")
+            
+            # Ждём 5 секунд до следующего обновления
+            print("\n🔄 Обновление через 5 секунд...")
+            time.sleep(5)
+            
+    except KeyboardInterrupt:
+        log.info("⏹️  Скринер остановлен пользователем")
+    except Exception as e:
+        log.error(f"❌ Ошибка в скринере: {e}")
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+ФАЙЛ: scripts/tinkoff_grpc_client.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/scripts/tinkoff_grpc_client.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Tinkoff gRPC клиент для получения стакана
+Быстрее и эффективнее REST версии
+Запуск: python scripts/tinkoff_grpc_client.py SBER
+"""
+
+import os
+import sys
+import grpc
+import asyncio
+from datetime import datetime
+from dotenv import load_dotenv
+
+# Загружаем переменные окружения
+load_dotenv()
+
+# Добавляем src в путь Python
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from utils.logger import log
+
+# Импортируем proto-модули Tinkoff
+try:
+    from tinkoff.invest import AsyncClient
+    from tinkoff.invest.schemas import InstrumentStatus, GetOrderBookRequest
+    from tinkoff.invest.services import MarketDataStreamManager
+    log.info("✅ Tinkoff библиотеки импортированы")
+except ImportError as e:
+    log.error(f"❌ Ошибка импорта: {e}")
+    print("Установите библиотеку: pip install tinkoff-invest")
+    sys.exit(1)
+
+class TinkoffGrpcFastClient:
+    """
+    Быстрый gRPC клиент для Tinkoff API
+    Использует асинхронные вызовы и стриминг
+    """
+    
+    def __init__(self, token=None):
+        """
+        Инициализация gRPC клиента
+        
+        Args:
+            token: Токен Tinkoff Invest API
+                  Если не указан, берётся из .env файла
+        """
+        self.token = token or os.getenv('INVEST_TOKEN')
+        if not self.token:
+            log.error("❌ Токен не найден. Укажите в .env файле или передайте в конструктор")
+            raise ValueError("Токен Tinkoff API не найден")
+        
+        log.info("🚀 Инициализация быстрого gRPC клиента Tinkoff")
+        self._client = None
+        
+    async def __aenter__(self):
+        """Контекстный менеджер для асинхронного клиента"""
+        self._client = AsyncClient(self.token)
+        await self._client.__aenter__()
+        return self
+    
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """Завершение работы клиента"""
+        if self._client:
+            await self._client.__aexit__(exc_type, exc_val, exc_tb)
+    
+    async def find_instrument_by_ticker(self, ticker: str):
+        """
+        Быстрый поиск инструмента по тикеру через gRPC
+        
+        Args:
+            ticker: Тикер инструмента (например, 'SBER')
+            
+        Returns:
+            Инструмент или None если не найден
+        """
+        try:
+            instruments = await self._client.instruments.find_instrument(query=ticker)
+            
+            for instrument in instruments.instruments:
+                if (instrument.ticker == ticker and 
+                    instrument.state == InstrumentStatus.INSTRUMENT_STATUS_BASE):
+                    log.info(f"✅ Найден инструмент: {instrument.name} ({instrument.ticker})")
+                    return instrument
+            
+            log.warning(f"⚠️ Инструмент {ticker} не найден в активных")
+            
+            # Попробуем найти любой инструмент с таким тикером
+            for instrument in instruments.instruments:
+                if instrument.ticker == ticker:
+                    log.info(f"📝 Инструмент найден, но статус: {instrument.state}")
+                    return instrument
+                    
+            return None
+            
+        except Exception as e:
+            log.error(f"❌ Ошибка поиска инструмента {ticker}: {e}")
+            return None
+    
+    async def get_orderbook_stream(self, ticker: str, depth: int = 10):
+        """
+        Получаем стакан в реальном времени через gRPC стрим
+        
+        Args:
+            ticker: Тикер инструмента
+            depth: Глубина стакана
+            
+        Returns:
+            Асинхронный генератор стаканов
+        """
+        instrument = await self.find_instrument_by_ticker(ticker)
+        if not instrument:
+            log.error(f"❌ Не удалось найти инструмент {ticker}")
+            return
+        
+        log.info(f"📊 Подключаемся к стриму стакана {ticker} (FIGI: {instrument.figi})")
+        
+        # Создаем менеджер стрима
+        stream_manager = MarketDataStreamManager(self._client)
+        
+        try:
+            async with stream_manager as stream:
+                # Подписываемся на стакан
+                await stream.order_book.subscribe(
+                    instrument.figi,
+                    depth=depth
+                )
+                
+                log.info(f"✅ Подписка на стакан {ticker} активирована")
+                print(f"\n🎯 СТРИМ СТАКАНА: {ticker}")
+                print("Для остановки нажмите Ctrl+C\n")
+                
+                # Получаем обновления стакана
+                async for orderbook in stream:
+                    yield self._format_orderbook(orderbook, ticker)
+                    
+        except asyncio.CancelledError:
+            log.info("⏹️ Стрим остановлен пользователем")
+        except Exception as e:
+            log.error(f"❌ Ошибка в стриме: {e}")
+    
+    async def get_orderbook_snapshot(self, ticker: str, depth: int = 10):
+        """
+        Быстрый однократный запрос стакана через gRPC
+        
+        Args:
+            ticker: Тикер инструмента
+            depth: Глубина стакана
+            
+        Returns:
+            Словарь с данными стакана
+        """
+        instrument = await self.find_instrument_by_ticker(ticker)
+        if not instrument:
+            return None
+        
+        try:
+            start_time = datetime.now()
+            
+            # Быстрый gRPC запрос
+            orderbook = await self._client.market_data.get_order_book(
+                figi=instrument.figi,
+                depth=depth
+            )
+            
+            response_time = (datetime.now() - start_time).total_seconds() * 1000
+            
+            result = {
+                'ticker': ticker,
+                'instrument': instrument,
+                'orderbook': orderbook,
+                'timestamp': datetime.now(),
+                'response_time_ms': response_time,
+                'source': 'gRPC'
+            }
+            
+            log.info(f"📊 Стакан {ticker} получен за {response_time:.1f} мс")
+            return result
+            
+        except Exception as e:
+            log.error(f"❌ Ошибка получения стакана {ticker}: {e}")
+            return None
+    
+    def _format_orderbook(self, orderbook_data, ticker: str):
+        """
+        Форматирует данные стакана для вывода
+        
+        Returns:
+            Отформатированные данные
+        """
+        if not orderbook_data or not hasattr(orderbook_data, 'orderbook'):
+            return None
+        
+        orderbook = orderbook_data.orderbook
+        
+        # Собираем биды и аски
+        bids = []
+        asks = []
+        
+        if orderbook.bids:
+            for bid in orderbook.bids[:5]:  # Только первые 5
+                price = self._quotation_to_float(bid.price)
+                quantity = bid.quantity
+                bids.append((price, quantity))
+        
+        if orderbook.asks:
+            for ask in orderbook.asks[:5]:
+                price = self._quotation_to_float(ask.price)
+                quantity = ask.quantity
+                asks.append((price, quantity))
+        
+        return {
+            'ticker': ticker,
+            'timestamp': datetime.now(),
+            'bids': bids,
+            'asks': asks,
+            'best_bid': self._quotation_to_float(orderbook.best_bid_price) if orderbook.best_bid_price else None,
+            'best_ask': self._quotation_to_float(orderbook.best_ask_price) if orderbook.best_ask_price else None,
+            'depth': len(orderbook.bids) + len(orderbook.asks)
+        }
+    
+    def _quotation_to_float(self, quotation):
+        """Конвертирует Quotation в float"""
+        if hasattr(quotation, 'units') and hasattr(quotation, 'nano'):
+            return quotation.units + quotation.nano / 1e9
+        return float(quotation) if quotation else 0.0
+    
+    def print_pretty_orderbook(self, data):
+        """
+        Красиво печатает стакан
+        
+        Args:
+            data: Данные стакана из get_orderbook_snapshot
+        """
+        if not data:
+            print(f"❌ Нет данных стакана")
+            return
+        
+        orderbook = data['orderbook']
+        instrument = data['instrument']
+        
+        print(f"\n{'='*60}")
+        print(f"📊 СТАКАН {data['ticker']} ({instrument.name})")
+        print(f"⏰ {data['timestamp'].strftime('%H:%M:%S')} | 📡 {data['source']}")
+        print(f"⚡ Время ответа: {data.get('response_time_ms', 0):.1f} мс")
+        print(f"{'='*60}")
+        
+        # Аски (продажа) - сверху
+        if orderbook.asks:
+            print("💰 ПРОДАЖА (asks):")
+            for ask in orderbook.asks[:5]:  # Первые 5 уровней
+                price = self._quotation_to_float(ask.price)
+                quantity = ask.quantity
+                print(f"  {price:10.2f} | {quantity:6} лотов")
+        else:
+            print("💰 ПРОДАЖА: пусто")
+        
+        print(f"{'-'*30}")
+        
+        # Биды (покупка) - снизу
+        if orderbook.bids:
+            print("🛒 ПОКУПКА (bids):")
+            for bid in orderbook.bids[:5]:
+                price = self._quotation_to_float(bid.price)
+                quantity = bid.quantity
+                print(f"  {price:10.2f} | {quantity:6} лотов")
+        else:
+            print("🛒 ПОКУПКА: пусто")
+        
+        print(f"{'='*60}")
+        
+        # Лучшие цены
+        if orderbook.best_bid_price and orderbook.best_ask_price:
+            spread = self._quotation_to_float(orderbook.best_ask_price) - self._quotation_to_float(orderbook.best_bid_price)
+            spread_percent = (spread / self._quotation_to_float(orderbook.best_bid_price)) * 100
+            print(f"💎 Лучший спрос:   {self._quotation_to_float(orderbook.best_bid_price):.2f}")
+            print(f"💎 Лучшее предложение: {self._quotation_to_float(orderbook.best_ask_price):.2f}")
+            print(f"📏 Спред: {spread:.2f} ({spread_percent:.2f}%)")
+        print(f"{'='*60}")
+
+# СИНХРОННЫЕ ФУНКЦИИ ДЛЯ КОМАНДНОЙ СТРОКИ
+# ==========================================
+
+async def get_orderbook_async(ticker="SBER", depth=5):
+    """Асинхронное получение стакана"""
+    async with TinkoffGrpcFastClient() as client:
+        data = await client.get_orderbook_snapshot(ticker, depth)
+        if data:
+            client.print_pretty_orderbook(data)
+        else:
+            print(f"❌ Не удалось получить стакан {ticker}")
+
+async def stream_orderbook_async(ticker="SBER", depth=5, limit=10):
+    """Асинхронный стрим стакана"""
+    client = TinkoffGrpcFastClient()
+    async with client as grpc_client:
+        count = 0
+        try:
+            async for orderbook in grpc_client.get_orderbook_stream(ticker, depth):
+                if orderbook:
+                    print(f"\n📈 Обновление #{count+1} - {ticker}")
+                    print(f"⏰ {orderbook['timestamp'].strftime('%H:%M:%S.%f')[:-3]}")
+                    
+                    if orderbook['asks']:
+                        print("💰 Продажа:")
+                        for price, qty in orderbook['asks']:
+                            print(f"  {price:10.2f} | {qty:6} лотов")
+                    
+                    if orderbook['bids']:
+                        print("🛒 Покупка:")
+                        for price, qty in orderbook['bids']:
+                            print(f"  {price:10.2f} | {qty:6} лотов")
+                    
+                    if orderbook['best_bid'] and orderbook['best_ask']:
+                        spread = orderbook['best_ask'] - orderbook['best_bid']
+                        print(f"📏 Спред: {spread:.2f}")
+                    
+                    count += 1
+                    if limit and count >= limit:
+                        print(f"\n✅ Получено {limit} обновлений")
+                        break
+                        
+        except KeyboardInterrupt:
+            print(f"\n⏹️ Остановлено пользователем. Получено обновлений: {count}")
+
+# СИНХРОННЫЕ ОБЕРТКИ ДЛЯ ЗАПУСКА ИЗ КОМАНДНОЙ СТРОКИ
+# ====================================================
+
+def get_orderbook(ticker="SBER", depth=5):
+    """Синхронная обертка для получения стакана"""
+    try:
+        asyncio.run(get_orderbook_async(ticker, depth))
+    except KeyboardInterrupt:
+        print("\n⏹️ Операция прервана")
+    except Exception as e:
+        print(f"❌ Ошибка: {e}")
+
+def stream_orderbook(ticker="SBER", depth=5, limit=None):
+    """Синхронная обертка для стрима стакана"""
+    try:
+        asyncio.run(stream_orderbook_async(ticker, depth, limit))
+    except KeyboardInterrupt:
+        print("\n⏹️ Поток остановлен")
+    except Exception as e:
+        print(f"❌ Ошибка в потоке: {e}")
+
+def test_connection():
+    """Тест подключения к gRPC"""
+    print("🧪 Тестируем gRPC подключение к Tinkoff...")
+    try:
+        asyncio.run(test_connection_async())
+    except Exception as e:
+        print(f"❌ Ошибка: {e}")
+
+async def test_connection_async():
+    """Асинхронный тест подключения"""
+    async with TinkoffGrpcFastClient() as client:
+        print("✅ gRPC клиент инициализирован")
+        
+        # Тестируем поиск SBER
+        instrument = await client.find_instrument_by_ticker("SBER")
+        if instrument:
+            print(f"✅ Инструмент найден: {instrument.name}")
+            return True
+        else:
+            print("❌ Инструмент не найден")
+            return False
+
+# ТОЧКА ВХОДА
+# ===========
+
+def main():
+    """Основная функция"""
+    if len(sys.argv) < 2:
+        print("""
+📡 Tinkoff gRPC Client - Быстрое получение стакана
+Использование:
+  python scripts/tinkoff_grpc_client.py <команда> [параметры]
+
+Команды:
+  get <тикер> [глубина]     - Однократный запрос стакана
+  stream <тикер> [глубина]  - Потоковый стакан (Ctrl+C для остановки)
+  test                      - Тест подключения
+  
+Примеры:
+  python scripts/tinkoff_grpc_client.py get SBER 10
+  python scripts/tinkoff_grpc_client.py stream GAZP 5
+  python scripts/tinkoff_grpc_client.py test
+        """)
+        return
+    
+    command = sys.argv[1].lower()
+    
+    if command == "get":
+        ticker = sys.argv[2] if len(sys.argv) > 2 else "SBER"
+        depth = int(sys.argv[3]) if len(sys.argv) > 3 else 5
+        get_orderbook(ticker, depth)
+    
+    elif command == "stream":
+        ticker = sys.argv[2] if len(sys.argv) > 2 else "SBER"
+        depth = int(sys.argv[3]) if len(sys.argv) > 3 else 5
+        limit = int(sys.argv[4]) if len(sys.argv) > 4 else None
+        stream_orderbook(ticker, depth, limit)
+    
+    elif command == "test":
+        test_connection()
+    
+    else:
+        print(f"❌ Неизвестная команда: {command}")
+        print("Доступные команды: get, stream, test")
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+ФАЙЛ: scripts/tinkoff_grpc_client_fixed.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/scripts/tinkoff_grpc_client_fixed.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Tinkoff gRPC клиент для получения стакана - ИСПРАВЛЕННАЯ ВЕРСИЯ 2
+"""
+
+import os
+import sys
+import asyncio
+from datetime import datetime
+from dotenv import load_dotenv
+
+# Загружаем переменные окружения
+load_dotenv()
+
+# Добавляем src в путь Python
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from utils.logger import log
+
+# Импортируем proto-модули Tinkoff
+try:
+    from tinkoff.invest import Client, AsyncClient
+    from tinkoff.invest.schemas import InstrumentStatus, InstrumentIdType
+    log.info("✅ Tinkoff библиотеки импортированы")
+except ImportError as e:
+    log.error(f"❌ Ошибка импорта: {e}")
+    sys.exit(1)
+
+class TinkoffGrpcFastClient:
+    """
+    Быстрый gRPC клиент для Tinkoff API
+    Использует асинхронные вызовы и стриминг
+    """
+    
+    def __init__(self, token=None):
+        """
+        Инициализация gRPC клиента
+        """
+        self.token = token or os.getenv('INVEST_TOKEN')
+        if not self.token:
+            log.error("❌ Токен не найден. Укажите в .env файле")
+            raise ValueError("Токен Tinkoff API не найден")
+        
+        log.info("🚀 Инициализация быстрого gRPC клиента Tinkoff")
+    
+    def find_instrument_by_ticker_sync(self, ticker: str):
+        """
+        Синхронный поиск инструмента (ИСПРАВЛЕННЫЙ ВАРИАНТ)
+        Ключевое исправление: получаем полный инструмент через get_instrument_by()
+        """
+        try:
+            with Client(self.token) as client:
+                # 1. Сначала находим инструмент через find_instrument
+                found_instruments = client.instruments.find_instrument(query=ticker)
+                
+                if not found_instruments.instruments:
+                    log.error(f"❌ Инструмент с тикером '{ticker}' не найден")
+                    return None
+                
+                # 2. Ищем точное совпадение по тикеру
+                target_instrument = None
+                for instrument in found_instruments.instruments:
+                    if instrument.ticker == ticker:
+                        target_instrument = instrument
+                        log.info(f"🔍 Найден тикер '{ticker}', получаем полные данные...")
+                        break
+                
+                if not target_instrument:
+                    log.error(f"❌ Точное совпадение для тикера '{ticker}' не найдено")
+                    return None
+                
+                # 3. Получаем ПОЛНЫЙ инструмент через get_instrument_by
+                # Используем FIGI, если есть, иначе uid
+                if hasattr(target_instrument, 'figi') and target_instrument.figi:
+                    full_instrument = client.instruments.get_instrument_by(
+                        id_type=InstrumentIdType.INSTRUMENT_ID_TYPE_FIGI,
+                        id=target_instrument.figi
+                    )
+                elif hasattr(target_instrument, 'uid') and target_instrument.uid:
+                    full_instrument = client.instruments.get_instrument_by(
+                        id_type=InstrumentIdType.INSTRUMENT_ID_TYPE_UID,
+                        id=target_instrument.uid
+                    )
+                else:
+                    log.error(f"❌ Не удалось определить ID для инструмента '{ticker}'")
+                    return None
+                
+                # 4. Проверяем, что инструмент активен
+                if full_instrument.instrument.state == InstrumentStatus.INSTRUMENT_STATUS_BASE:
+                    log.info(f"✅ Найден активный инструмент: {full_instrument.instrument.name} ({full_instrument.instrument.ticker})")
+                    return full_instrument.instrument
+                else:
+                    log.warning(f"⚠️  Инструмент найден, но неактивен: {full_instrument.instrument.name}, статус: {full_instrument.instrument.state}")
+                    return full_instrument.instrument
+                
+        except Exception as e:
+            log.error(f"❌ Ошибка поиска инструмента '{ticker}': {e}")
+            import traceback
+            log.error(f"Подробности: {traceback.format_exc()}")
+            return None
+    
+    def get_orderbook_snapshot_sync(self, ticker: str, depth: int = 5):
+        """
+        Синхронный запрос стакана (основной рабочий метод)
+        """
+        log.info(f"📊 Запрашиваем стакан для '{ticker}'...")
+        instrument = self.find_instrument_by_ticker_sync(ticker)
+        
+        if not instrument:
+            log.error(f"❌ Не удалось найти инструмент '{ticker}' для стакана")
+            return None
+        
+        try:
+            start_time = datetime.now()
+            
+            with Client(self.token) as client:
+                # Получаем стакан
+                orderbook = client.market_data.get_order_book(
+                    figi=instrument.figi,
+                    depth=depth
+                )
+            
+            response_time = (datetime.now() - start_time).total_seconds() * 1000
+            
+            result = {
+                'ticker': ticker,
+                'instrument': instrument,
+                'orderbook': orderbook,
+                'timestamp': datetime.now(),
+                'response_time_ms': response_time,
+                'source': 'gRPC (sync)'
+            }
+            
+            log.info(f"✅ Стакан '{ticker}' получен за {response_time:.1f} мс")
+            return result
+            
+        except Exception as e:
+            log.error(f"❌ Ошибка получения стакана '{ticker}': {e}")
+            return None
+    
+    def _quotation_to_float(self, quotation):
+        """Конвертирует Quotation в float"""
+        if hasattr(quotation, 'units') and hasattr(quotation, 'nano'):
+            return quotation.units + quotation.nano / 1e9
+        return float(quotation) if quotation else 0.0
+    
+    def print_pretty_orderbook(self, data):
+        """
+        Красиво печатает стакан
+        """
+        if not data:
+            print(f"❌ Нет данных стакана")
+            return
+        
+        orderbook = data['orderbook']
+        instrument = data['instrument']
+        
+        print(f"\n{'='*60}")
+        print(f"📊 СТАКАН {data['ticker']} ({instrument.name})")
+        print(f"⏰ {data['timestamp'].strftime('%H:%M:%S')} | 📡 {data['source']}")
+        print(f"⚡ Время ответа: {data.get('response_time_ms', 0):.1f} мс")
+        print(f"{'='*60}")
+        
+        # Аски (продажа) - сверху
+        if orderbook.asks:
+            print("💰 ПРОДАЖА (asks):")
+            for ask in orderbook.asks[:5]:
+                price = self._quotation_to_float(ask.price)
+                quantity = ask.quantity
+                print(f"  {price:10.2f} | {quantity:6} лотов")
+        else:
+            print("💰 ПРОДАЖА: пусто")
+        
+        print(f"{'-'*30}")
+        
+        # Биды (покупка) - снизу
+        if orderbook.bids:
+            print("🛒 ПОКУПКА (bids):")
+            for bid in orderbook.bids[:5]:
+                price = self._quotation_to_float(bid.price)
+                quantity = bid.quantity
+                print(f"  {price:10.2f} | {quantity:6} лотов")
+        else:
+            print("🛒 ПОКУПКА: пусто")
+        
+        print(f"{'='*60}")
+        
+        # Лучшие цены
+        if orderbook.best_bid_price and orderbook.best_ask_price:
+            spread = self._quotation_to_float(orderbook.best_ask_price) - self._quotation_to_float(orderbook.best_bid_price)
+            spread_percent = (spread / self._quotation_to_float(orderbook.best_bid_price)) * 100
+            print(f"💎 Лучший спрос:   {self._quotation_to_float(orderbook.best_bid_price):.2f}")
+            print(f"💎 Лучшее предложение: {self._quotation_to_float(orderbook.best_ask_price):.2f}")
+            print(f"📏 Спред: {spread:.2f} ({spread_percent:.2f}%)")
+        print(f"{'='*60}")
+
+# СИНХРОННЫЕ ФУНКЦИИ ДЛЯ КОМАНДНОЙ СТРОКИ
+# ==========================================
+
+def get_orderbook_sync(ticker="SBER", depth=5):
+    """Синхронное получение стакана"""
+    client = TinkoffGrpcFastClient()
+    data = client.get_orderbook_snapshot_sync(ticker, depth)
+    if data:
+        client.print_pretty_orderbook(data)
+    else:
+        print(f"❌ Не удалось получить стакан {ticker}")
+
+def test_connection_sync(ticker="SBER"):
+    """Синхронный тест подключения"""
+    print(f"🧪 Тестируем подключение к Tinkoff для тикера '{ticker}'...")
+    try:
+        client = TinkoffGrpcFastClient()
+        instrument = client.find_instrument_by_ticker_sync(ticker)
+        if instrument:
+            print(f"✅ Инструмент найден!")
+            print(f"   Название: {instrument.name}")
+            print(f"   Тикер: {instrument.ticker}")
+            print(f"   FIGI: {instrument.figi}")
+            print(f"   Статус: {instrument.state}")
+            print(f"   Лот: {instrument.lot}")
+            return True
+        else:
+            print(f"❌ Инструмент '{ticker}' не найден")
+            return False
+    except Exception as e:
+        print(f"❌ Ошибка: {e}")
+        return False
+
+def simple_test():
+    """Простой тест напрямую через API"""
+    print("🧪 Простой тест API...")
+    try:
+        from tinkoff.invest import Client
+        from tinkoff.invest.schemas import InstrumentIdType
+        from dotenv import load_dotenv
+        import os
+        
+        load_dotenv()
+        token = os.getenv('INVEST_TOKEN')
+        
+        with Client(token) as client:
+            # Ищем SBER
+            instruments = client.instruments.find_instrument(query="SBER")
+            print(f"🔍 Найдено инструментов: {len(instruments.instruments)}")
+            
+            for i, instr in enumerate(instruments.instruments[:3]):
+                print(f"\nИнструмент {i+1}:")
+                print(f"  Тип: {type(instr)}")
+                print(f"  Тикер: {instr.ticker}")
+                print(f"  Название: {instr.name}")
+                print(f"  Атрибуты: {[attr for attr in dir(instr) if not attr.startswith('_')]}")
+                
+                # Пробуем получить полный инструмент если есть FIGI
+                if hasattr(instr, 'figi') and instr.figi:
+                    try:
+                        full = client.instruments.get_instrument_by(
+                            id_type=InstrumentIdType.INSTRUMENT_ID_TYPE_FIGI,
+                            id=instr.figi
+                        )
+                        print(f"  ✅ Полный инструмент получен!")
+                        print(f"     Статус: {full.instrument.state}")
+                    except Exception as e:
+                        print(f"  ❌ Ошибка получения полного инструмента: {e}")
+        
+        return True
+    except Exception as e:
+        print(f"❌ Ошибка простого теста: {e}")
+        return False
+
+# ТОЧКА ВХОДА
+# ===========
+
+def main():
+    """Основная функция"""
+    if len(sys.argv) < 2:
+        print("""
+📡 Tinkoff gRPC Client v2 - Быстрое получение стакана
+Использование:
+  python scripts/tinkoff_grpc_client_fixed.py <команда> [тикер] [глубина]
+
+Команды:
+  test [тикер]       - Тест подключения и поиска инструмента
+  get [тикер] [глуб] - Получить стакан (глубина по умолчанию: 5)
+  simple             - Простой тест API напрямую
+  
+Примеры:
+  python scripts/tinkoff_grpc_client_fixed.py test SBER
+  python scripts/tinkoff_grpc_client_fixed.py get GAZP 10
+  python scripts/tinkoff_grpc_client_fixed.py simple
+        """)
+        return
+    
+    command = sys.argv[1].lower()
+    
+    if command == "test":
+        ticker = sys.argv[2] if len(sys.argv) > 2 else "SBER"
+        test_connection_sync(ticker)
+    
+    elif command == "get":
+        ticker = sys.argv[2] if len(sys.argv) > 2 else "SBER"
+        depth = int(sys.argv[3]) if len(sys.argv) > 3 else 5
+        get_orderbook_sync(ticker, depth)
+    
+    elif command == "simple":
+        simple_test()
+    
+    else:
+        print(f"❌ Неизвестная команда: {command}")
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+ФАЙЛ: scripts/tinkoff_scanner.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/scripts/tinkoff_scanner.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Скринер стаканов на Tinkoff API (боевой контур)
+"""
+
+import sys
+import os
+import time
+from dotenv import load_dotenv
+
+# Загружаем переменные из .env файла
+load_dotenv()
+
+# Добавляем src в путь Python
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+
+from data_feed.tinkoff_client_simple import TinkoffAPIClientSimple
+from utils.logger import log
+
+def main():
+    """Основная функция скринера"""
+    log.info("🚀 Запускаем скринер на Tinkoff API (БОЕВОЙ КОНТУР)...")
+    
+    try:
+        client = TinkoffAPIClientSimple()
+        
+        # Тестируем подключение
+        test_data = client.get_orderbook("SBER")
+        if test_data:
+            log.info("✅ Подключение к Tinkoff API работает")
+        else:
+            log.error("❌ Проблема с подключением к Tinkoff API")
+            return
+    
+    except Exception as e:
+        log.error(f"❌ Ошибка инициализации: {e}")
+        return
+    
+    # Список тикеров для мониторинга
+    tickers = ["ABIO"]
+    
+    try:
+        while True:
+            # Очищаем консоль
+            os.system('clear' if os.name == 'posix' else 'cls')
+            
+            print("🎯 СКРИНЕР СТАКАНОВ - TINKOFF API (БОЕВОЙ КОНТУР)")
+            print("ДАННЫЕ РЕАЛЬНЫЕ - БУДЬТЕ ОСТОРОЖНЫ!")
+            print("Для остановки нажмите Ctrl+C\n")
+            
+            for ticker in tickers:
+                client.print_pretty_orderbook(ticker, depth=3)
+                print()
+            
+            print("🔄 Обновление через 1 секунд...")
+            time.sleep(1)
+            
+    except KeyboardInterrupt:
+        log.info("⏹️  Скринер остановлен пользователем")
+    except Exception as e:
+        log.error(f"❌ Ошибка в скринере: {e}")
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+ФАЙЛ: src/__init__.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/src/__init__.py
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: src/data_feed/__init__.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/src/data_feed/__init__.py
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: src/data_feed/moex_client.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/src/data_feed/moex_client.py
+================================================================================
+
+import requests
+import pandas as pd
+from src.utils.logger import log
+
+class MOEXClient:
+    """
+    Клиент для работы с API Московской биржи
+    """
+    
+    def __init__(self):
+        self.base_url = "https://iss.moex.com/iss"
+        self.session = requests.Session()
+        log.info("MOEX клиент инициализирован")
+    
+    def get_security_info(self, ticker: str) -> dict:
+        """Получить базовую информацию о бумаге"""
+        url = f"{self.base_url}/securities/{ticker}.json"
+        try:
+            response = self.session.get(url)
+            response.raise_for_status()
+            data = response.json()
+            log.info(f"Данные по {ticker} получены")
+            return data
+        except Exception as e:
+            log.error(f"Ошибка получения данных по {ticker}: {e}")
+            return {}
+    
+    def get_current_market_data(self, ticker: str) -> dict:
+        """Получить текущие рыночные данные"""
+        url = f"{self.base_url}/engines/stock/markets/shares/boards/TQBR/securities/{ticker}.json"
+        try:
+            response = self.session.get(url)
+            data = response.json()
+            
+            # Извлекаем рыночные данные
+            market_data = data.get('marketdata', {}).get('data', [])
+            if market_data:
+                # Базовые поля из рыночных данных
+                last_trade = market_data[0]
+                return {
+                    'last_price': last_trade[12],  # LAST
+                    'change': last_trade[13],      # CHANGE
+                    'volume': last_trade[9]        # VOLUME
+                }
+            return {}
+        except Exception as e:
+            log.error(f"Ошибка получения рыночных данных {ticker}: {e}")
+            return {}
+
+if __name__ == "__main__":
+    # Тестируем клиент
+    client = MOEXClient()
+    
+    # Тест получения данных по SBER
+    sber_info = client.get_security_info("SBER")
+    if sber_info:
+        log.info("✅ MOEX клиент работает - данные SBER получены")
+    
+    sber_market = client.get_current_market_data("SBER")
+    if sber_market:
+        log.info(f"✅ Рыночные данные SBER: {sber_market}")
+
+
+================================================================================
+ФАЙЛ: src/data_feed/orderbook.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/src/data_feed/orderbook.py
+================================================================================
+
+import requests
+import pandas as pd
+import sys
+import os
+
+# Добавляем путь для импорта utils
+current_dir = os.path.dirname(os.path.abspath(__file__))
+src_root = os.path.dirname(current_dir)
+sys.path.insert(0, src_root)
+
+from utils.logger import log
+
+class MOEXOrderbook:
+    """Клиент для получения стакана заявок с MOEX"""
+    
+    def __init__(self):
+        self.base_url = "https://iss.moex.com/iss"
+        self.session = requests.Session()
+        log.info("MOEX Orderbook клиент инициализирован")
+    
+    def get_orderbook(self, ticker: str) -> dict:
+        """Получить стакан заявок по тикеру"""
+        url = f"{self.base_url}/engines/stock/markets/shares/securities/{ticker}/orderbook.json"
+        
+        try:
+            response = self.session.get(url)
+            response.raise_for_status()
+            data = response.json()
+            
+            # Парсим стакан
+            orderbook_data = self._parse_orderbook(data)
+            log.info(f"Стакан по {ticker} получен")
+            return orderbook_data
+            
+        except Exception as e:
+            log.error(f"Ошибка получения стакана {ticker}: {e}")
+            log.error(f"URL был: {url}")
+            return {}
+    
+    def _parse_orderbook(self, data: dict) -> dict:
+        """Парсим данные стакана"""
+        result = {}
+        
+        # Парсим покупки (bids)
+        if 'orderbook' in data and 'bids' in data['orderbook']:
+            bids_data = data['orderbook']['bids']
+            if bids_data:
+                result['bids'] = pd.DataFrame(bids_data)
+        
+        # Парсим продажи (asks)  
+        if 'orderbook' in data and 'asks' in data['orderbook']:
+            asks_data = data['orderbook']['asks']
+            if asks_data:
+                result['asks'] = pd.DataFrame(asks_data)
+        
+        return result
+    
+    def print_pretty_orderbook(self, ticker: str, levels: int = 5):
+        """Красиво выводим стакан"""
+        orderbook = self.get_orderbook(ticker)
+        
+        if not orderbook or ('bids' not in orderbook and 'asks' not in orderbook):
+            print(f"❌ Не удалось получить стакан для {ticker}")
+            print("ℹ️  Возможные причины:")
+            print("   - Торги по этой бумаге не идут")
+            print("   - Проблема с подключением к MOEX")
+            print("   - Тикер указан неверно")
+            return
+        
+        print(f"\n📊 Стакан по {ticker}:")
+        print("=" * 50)
+        
+        # Выводим продажи (asks) - сверху
+        if 'asks' in orderbook and not orderbook['asks'].empty:
+            print("💰 ПРОДАЖИ (asks):")
+            asks_df = orderbook['asks'].head(levels)
+            for _, row in asks_df.iterrows():
+                price = row[0]  # Цена
+                quantity = row[1]  # Количество
+                print(f"   {price:8.2f} | {quantity:6} лотов")
+        
+        print("-" * 30)
+        
+        # Выводим покупки (bids) - снизу
+        if 'bids' in orderbook and not orderbook['bids'].empty:
+            print("🛒 ПОКУПКИ (bids):")
+            bids_df = orderbook['bids'].head(levels)
+            for _, row in bids_df.iterrows():
+                price = row[0]  # Цена
+                quantity = row[1]  # Количество
+                print(f"   {price:8.2f} | {quantity:6} лотов")
+        
+        print("=" * 50)
+
+if __name__ == "__main__":
+    client = MOEXOrderbook()
+    client.print_pretty_orderbook("SBER")
+
+
+================================================================================
+ФАЙЛ: src/data_feed/tinkoff_client.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/src/data_feed/tinkoff_client.py
+================================================================================
+
+import os
+import sys
+from datetime import datetime
+from dotenv import load_dotenv
+
+# Загружаем переменные из .env
+load_dotenv()
+
+# Добавляем путь для импорта utils
+current_dir = os.path.dirname(os.path.abspath(__file__))
+src_root = os.path.dirname(current_dir)
+sys.path.insert(0, src_root)
+
+from tinkoff.invest import Client, GetOrderBookRequest
+from tinkoff.invest.schemas import InstrumentStatus
+from utils.logger import log
+
+class TinkoffAPIClient:
+    """Клиент для работы с Tinkoff Invest API (боевой контур)"""
+    
+    def __init__(self):
+        self.token = os.getenv('INVEST_TOKEN')
+        if not self.token:
+            log.error("❌ Токен Tinkoff Invest API не найден в .env файле")
+            raise ValueError("Токен не найден")
+        
+        log.info("Tinkoff API клиент инициализирован (БОЕВОЙ КОНТУР)")
+    
+    def find_instrument_by_ticker(self, ticker):
+        """Находит инструмент по тикеру и возвращает его FIGI"""
+        with Client(self.token) as client:
+            instruments = client.instruments.find_instrument(query=ticker)
+            for instrument in instruments.instruments:
+                # ИСПРАВЛЕНИЕ: используем instrument.state вместо instrument.instrument_status
+                if instrument.ticker == ticker and instrument.state == InstrumentStatus.INSTRUMENT_STATUS_BASE:
+                    log.info(f"Найден инструмент: {instrument.name} ({instrument.ticker}), FIGI: {instrument.figi}")
+                    return instrument
+            log.error(f"Инструмент с тикером {ticker} не найден")
+            return None
+    
+    def get_orderbook(self, ticker: str, depth: int = 5):
+        """Получить стакан заявок по тикеру"""
+        instrument = self.find_instrument_by_ticker(ticker)
+        if not instrument:
+            return None
+            
+        try:
+            with Client(self.token) as client:
+                request = GetOrderBookRequest(figi=instrument.figi, depth=depth)
+                orderbook = client.market_data.get_order_book(request)
+                
+                return {
+                    'ticker': ticker,
+                    'instrument': instrument,
+                    'orderbook': orderbook,
+                    'timestamp': datetime.now()
+                }
+                
+        except Exception as e:
+            log.error(f"Ошибка получения стакана {ticker}: {e}")
+            return None
+    
+    def print_pretty_orderbook(self, ticker: str, depth: int = 5):
+        """Красиво выводим стакан"""
+        data = self.get_orderbook(ticker, depth)
+        
+        if not data:
+            print(f"❌ Не удалось получить стакан для {ticker}")
+            return
+        
+        orderbook = data['orderbook']
+        instrument = data['instrument']
+        
+        print(f"\n📊 Стакан по {ticker} ({instrument.name}):")
+        print("=" * 60)
+        
+        # Выводим продажи (asks) - сверху
+        if orderbook.asks:
+            print("💰 ПРОДАЖИ (asks):")
+            for ask in orderbook.asks:
+                price = self.quotation_to_float(ask.price)
+                quantity = ask.quantity
+                print(f"   {price:10.2f} | {quantity:6} лотов")
+        
+        print("-" * 30)
+        
+        # Выводим покупки (bids) - снизу  
+        if orderbook.bids:
+            print("🛒 ПОКУПКИ (bids):")
+            for bid in orderbook.bids:
+                price = self.quotation_to_float(bid.price)
+                quantity = bid.quantity
+                print(f"   {price:10.2f} | {quantity:6} лотов")
+        
+        print("=" * 60)
+        if hasattr(orderbook, 'best_bid') and orderbook.best_bid:
+            print(f"💎 Лучший спрос: {self.quotation_to_float(orderbook.best_bid):.2f}")
+        if hasattr(orderbook, 'best_ask') and orderbook.best_ask:
+            print(f"💎 Лучшее предложение: {self.quotation_to_float(orderbook.best_ask):.2f}")
+        print(f"⏰ Время: {data['timestamp'].strftime('%H:%M:%S')}")
+    
+    def quotation_to_float(self, quotation):
+        """Конвертируем Quotation в float"""
+        if hasattr(quotation, 'units') and hasattr(quotation, 'nano'):
+            return quotation.units + quotation.nano / 1e9
+        return float(quotation) if quotation else 0.0
+
+if __name__ == "__main__":
+    client = TinkoffAPIClient()
+    client.print_pretty_orderbook("SBER")
+
+
+================================================================================
+ФАЙЛ: src/data_feed/tinkoff_client_simple.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/src/data_feed/tinkoff_client_simple.py
+================================================================================
+
+import os
+import sys
+from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+src_root = os.path.dirname(current_dir)
+sys.path.insert(0, src_root)
+
+from tinkoff.invest import Client
+from utils.logger import log
+
+class TinkoffAPIClientSimple:
+    def __init__(self):
+        self.token = os.getenv('INVEST_TOKEN')
+        if not self.token:
+            log.error("❌ Токен не найден в .env файле")
+            raise ValueError("Токен не найден")
+        log.info("Tinkoff API клиент инициализирован (БОЕВОЙ КОНТУР)")
+    
+    def find_instrument_by_ticker(self, ticker):
+        with Client(self.token) as client:
+            instruments = client.instruments.find_instrument(query=ticker)
+            for instrument in instruments.instruments:
+                if instrument.ticker == ticker:
+                    log.info(f"Найден инструмент: {instrument.name} ({instrument.ticker}), FIGI: {instrument.figi}")
+                    # УБИРАЕМ проблемные атрибуты
+                    return instrument
+            log.error(f"Инструмент с тикером {ticker} не найден")
+            return None
+    
+    def get_orderbook(self, ticker: str, depth: int = 5):
+        instrument = self.find_instrument_by_ticker(ticker)
+        if not instrument:
+            return None
+            
+        try:
+            with Client(self.token) as client:
+                log.info(f"Запрашиваем стакан для FIGI: {instrument.figi}, глубина: {depth}")
+                orderbook = client.market_data.get_order_book(figi=instrument.figi, depth=depth)
+                
+                # Диагностика стакана
+                log.info(f"Стакан получен: {orderbook}")
+                log.info(f"Количество bids: {len(orderbook.bids)}")
+                log.info(f"Количество asks: {len(orderbook.asks)}")
+                
+                return {
+                    'ticker': ticker,
+                    'instrument': instrument,
+                    'orderbook': orderbook,
+                    'timestamp': datetime.now()
+                }
+                
+        except Exception as e:
+            log.error(f"Ошибка получения стакана {ticker}: {e}")
+            return None
+    
+    def print_pretty_orderbook(self, ticker: str, depth: int = 5):
+        data = self.get_orderbook(ticker, depth)
+        
+        if not data:
+            print(f"❌ Не удалось получить стакан для {ticker}")
+            return
+        
+        orderbook = data['orderbook']
+        instrument = data['instrument']
+        
+        print(f"\n📊 Стакан по {ticker} ({instrument.name}):")
+        print("=" * 60)
+        
+        if orderbook.asks:
+            print("💰 ПРОДАЖИ (asks):")
+            for ask in orderbook.asks:
+                price = self.quotation_to_float(ask.price)
+                quantity = ask.quantity
+                print(f"   {price:10.2f} | {quantity:6} лотов")
+        else:
+            print("💰 ПРОДАЖИ (asks): пусто")
+        
+        print("-" * 30)
+        
+        if orderbook.bids:
+            print("🛒 ПОКУПКИ (bids):")
+            for bid in orderbook.bids:
+                price = self.quotation_to_float(bid.price)
+                quantity = bid.quantity
+                print(f"   {price:10.2f} | {quantity:6} лотов")
+        else:
+            print("🛒 ПОКУПКИ (bids): пусто")
+        
+        print("=" * 60)
+        if hasattr(orderbook, 'best_bid_price') and orderbook.best_bid_price:
+            print(f"💎 Лучший спрос: {self.quotation_to_float(orderbook.best_bid_price):.2f}")
+        else:
+            print(f"💎 Лучший спрос: нет данных")
+            
+        if hasattr(orderbook, 'best_ask_price') and orderbook.best_ask_price:
+            print(f"💎 Лучшее предложение: {self.quotation_to_float(orderbook.best_ask_price):.2f}")
+        else:
+            print(f"💎 Лучшее предложение: нет данных")
+            
+        print(f"⏰ Время: {data['timestamp'].strftime('%H:%M:%S')}")
+    
+    def quotation_to_float(self, quotation):
+        if hasattr(quotation, 'units') and hasattr(quotation, 'nano'):
+            return quotation.units + quotation.nano / 1e9
+        return float(quotation) if quotation else 0.0
+
+if __name__ == "__main__":
+    client = TinkoffAPIClientSimple()
+    client.print_pretty_orderbook("SBER")
+
+
+================================================================================
+ФАЙЛ: src/execution/__init__.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/src/execution/__init__.py
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: src/risk_management/__init__.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/src/risk_management/__init__.py
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: src/strategies/__init__.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/src/strategies/__init__.py
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: src/utils/__init__.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/src/utils/__init__.py
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: src/utils/logger.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/src/utils/logger.py
+================================================================================
+
+from loguru import logger
+import sys
+import os
+
+def setup_logger():
+    """Настройка логгера для trading бота"""
+    
+    # Создаём папку для логов если её нет
+    os.makedirs("logs", exist_ok=True)
+    
+    # Убираем стандартный handler
+    logger.remove()
+    
+    # Добавляем консольный handler
+    logger.add(
+        sys.stdout,
+        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+        level="INFO",
+        colorize=True
+    )
+    
+    # Добавляем файловый handler
+    logger.add(
+        "logs/trading_bot.log",
+        rotation="10 MB",
+        retention="10 days",
+        level="DEBUG",
+        format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} - {message}"
+    )
+    
+    return logger
+
+# Создаём глобальный логгер
+log = setup_logger()
+
+if __name__ == "__main__":
+    log.info("Логгер настроен корректно!")
+    log.debug("Отладочное сообщение")
+    log.warning("Предупреждение")
+
+
+================================================================================
+ФАЙЛ: telegram_bot/__init__.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/__init__.py
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: telegram_bot/bot.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/bot.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Основной модуль Telegram бота
+Запуск: python telegram_bot/bot.py
+"""
+
+import os
+import sys
+import asyncio
+from pathlib import Path
+
+# Добавляем корень проекта в путь Python
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
+from dotenv import load_dotenv
+from telegram import Update
+from telegram.ext import Application, CommandHandler, ContextTypes
+
+# Импортируем обработчики
+from telegram_bot.handlers.basic import start, help_command, status
+from telegram_bot.handlers.settings import set_ticker, set_depth, set_interval
+from telegram_bot.handlers.orderbook import get_orderbook, start_monitoring, stop_monitoring
+
+# Загружаем переменные окружения
+load_dotenv()
+
+# Получаем конфигурацию
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+
+def create_application():
+    """Создаёт и настраивает приложение бота"""
+    # Создаём приложение
+    application = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
+    
+    # Добавляем обработчики команд
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("help", help_command))
+    application.add_handler(CommandHandler("status", status))
+    
+    application.add_handler(CommandHandler("ticker", set_ticker))
+    application.add_handler(CommandHandler("depth", set_depth))
+    application.add_handler(CommandHandler("interval", set_interval))
+    
+    application.add_handler(CommandHandler("orderbook", get_orderbook))
+    application.add_handler(CommandHandler("start_monitoring", start_monitoring))
+    application.add_handler(CommandHandler("stop_monitoring", stop_monitoring))
+    
+    return application
+
+def main():
+    """Основная функция запуска бота"""
+    print("🤖 Бот запускается...")
+    
+    if not TELEGRAM_BOT_TOKEN or "ваш_токен" in TELEGRAM_BOT_TOKEN:
+        print("❌ Токен бота не настроен!")
+        print("   Проверьте TELEGRAM_BOT_TOKEN в .env файле")
+        return
+    
+    try:
+        # Создаём приложение
+        application = create_application()
+        
+        # Запускаем бота с правильным методом для версии 22.5
+        print("✅ Бот инициализирован")
+        print("📡 Запускаем polling... (Ctrl+C для остановки)")
+        
+        # Для python-telegram-bot 22.5 используем run_polling
+        application.run_polling()
+        
+    except KeyboardInterrupt:
+        print("\n\n⏹️  Бот остановлен пользователем (Ctrl+C)")
+    except Exception as e:
+        print(f"❌ Ошибка запуска бота: {e}")
+        import traceback
+        traceback.print_exc()
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+ФАЙЛ: telegram_bot/config.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/config.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Конфигурация и состояние бота
+"""
+
+import os
+from dotenv import load_dotenv
+
+# Загружаем переменные окружения
+load_dotenv()
+
+# Настройки бота из .env
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN', 'ваш_токен_бота_сюда')
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID', 'ваш_chat_id_сюда')
+
+# Настройки Tinkoff из .env
+INVEST_TOKEN = os.getenv('INVEST_TOKEN', 'ваш_токен_сюда')
+SANDBOX = os.getenv('SANDBOX', 'true').lower() == 'true'
+
+# Состояние бота (хранится в памяти)
+bot_state = {
+    'ticker': os.getenv('DEFAULT_TICKER', 'SBER'),
+    'depth': int(os.getenv('DEFAULT_DEPTH', 5)),
+    'interval': int(os.getenv('DEFAULT_INTERVAL', 10)),
+    'monitoring_job': None  # Задача мониторинга
+}
+
+
+================================================================================
+ФАЙЛ: telegram_bot/get_chat_id.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/get_chat_id.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Получение Chat ID для Telegram бота
+Запуск: python telegram_bot/get_chat_id.py
+"""
+
+import os
+import sys
+import asyncio
+from pathlib import Path
+
+# Добавляем корень проекта в путь Python
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
+from dotenv import load_dotenv
+from telegram import Bot
+from telegram.error import TelegramError
+
+async def get_chat_id():
+    # Загружаем переменные из .env
+    load_dotenv()
+    
+    token = os.getenv('TELEGRAM_BOT_TOKEN')
+    
+    if not token:
+        print("❌ Токен не найден в .env файле")
+        print("   Добавьте TELEGRAM_BOT_TOKEN=ваш_токен в .env")
+        return False
+    
+    if "ваш_токен_бота_сюда" in token or "your_bot_token_here" in token:
+        print("❌ Токен не изменен!")
+        print("   Замените значение TELEGRAM_BOT_TOKEN в .env на реальный токен")
+        return False
+    
+    print("🔍 ПОЛУЧЕНИЕ TELEGRAM CHAT ID")
+    
+    try:
+        bot = Bot(token=token)
+        print("🔄 Проверяем подключение к боту...")
+        bot_info = await bot.get_me()
+        print(f"✅ Бот: @{bot_info.username}")
+        
+        print("📩 Ищем последние сообщения...")
+        updates = await bot.get_updates(timeout=10, limit=10)
+        
+        if not updates:
+            print("❌ Сообщений не найдено!")
+            print("📱 Что делать:")
+            print("   1. Откройте Телеграм")
+            print(f"   2. Найдите бота: @{bot_info.username}")
+            print("   3. Нажмите START или напишите любое сообщение")
+            print("   4. Запустите этот скрипт снова")
+            return False
+        
+        print(f"✅ Найдено сообщений: {len(updates)}")
+        
+        # Используем последний чат
+        last_update = updates[-1]
+        if last_update.message:
+            chat_id = last_update.message.chat.id
+        elif last_update.callback_query:
+            chat_id = last_update.callback_query.message.chat.id
+        else:
+            print("❌ Не удалось извлечь chat_id")
+            return False
+        
+        print(f"🎯 ПОСЛЕДНИЙ ЧАТ ID: {chat_id}")
+        
+        # Обновляем .env файл
+        env_path = project_root / ".env"
+        if env_path.exists():
+            with open(env_path, "r") as f:
+                lines = f.readlines()
+            
+            updated = False
+            for i, line in enumerate(lines):
+                if line.strip().startswith("TELEGRAM_CHAT_ID="):
+                    lines[i] = f"TELEGRAM_CHAT_ID={chat_id}\n"
+                    updated = True
+                    break
+            
+            if not updated:
+                lines.append(f"\nTELEGRAM_CHAT_ID={chat_id}\n")
+            
+            with open(env_path, "w") as f:
+                f.writelines(lines)
+            
+            print(f"✅ Chat ID сохранен в .env файл")
+        else:
+            print(f"📝 Создайте .env и добавьте строку:")
+            print(f"TELEGRAM_CHAT_ID={chat_id}")
+        
+        return True
+        
+    except TelegramError as e:
+        print(f"❌ Ошибка Telegram API: {e}")
+        return False
+    except Exception as e:
+        print(f"❌ Неожиданная ошибка: {e}")
+        return False
+
+def main():
+    print("🚀 Запуск получения Chat ID для Telegram бота")
+    
+    # Проверяем виртуальное окружение
+    if sys.prefix == sys.base_prefix:
+        print("⚠️  Совет: Активируйте виртуальное окружение: source trading_env/bin/activate")
+    
+    success = asyncio.run(get_chat_id())
+    
+    if success:
+        print("🎉 Готово! Chat ID получен и сохранен.")
+    else:
+        print("❌ Не удалось получить Chat ID")
+    
+    return 0 if success else 1
+
+if __name__ == "__main__":
+    sys.exit(main())
+
+
+================================================================================
+ФАЙЛ: telegram_bot/handlers/__init__.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/handlers/__init__.py
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: telegram_bot/handlers/basic.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/handlers/basic.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Обработчики базовых команд бота
+"""
+
+from telegram import Update
+from telegram.ext import ContextTypes
+from telegram_bot.config import bot_state
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обработчик команды /start"""
+    welcome_text = """
+🤖 <b>Торговый бот для получения стакана</b>
+
+Я помогаю получать стакан заявок с биржи через Telegram.
+
+<b>Основные команды:</b>
+/ticker [тикер] - установить тикер (например: /ticker SBER)
+/depth [число] - установить глубину стакана (например: /depth 10)
+/interval [секунды] - установить интервал отправки (например: /interval 5)
+
+<b>Команды стакана:</b>
+/orderbook - получить текущий стакан
+/start_monitoring - запустить периодическую отправку
+/stop_monitoring - остановить отправку
+
+<b>Другие команды:</b>
+/status - текущие настройки
+/help - помощь
+
+<b>Пример настройки:</b>
+/ticker SBER
+/depth 5
+/interval 10
+/start_monitoring
+"""
+    await update.message.reply_text(welcome_text, parse_mode='HTML')
+
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обработчик команды /help"""
+    help_text = """
+📚 <b>Справка по командам</b>
+
+<b>Настройки:</b>
+• /ticker [тикер] - Установить тикер бумаги (пример: SBER, GAZP, YNDX)
+• /depth [число] - Глубина стакана (от 1 до 50)
+• /interval [секунды] - Интервал отправки (от 1 до 3600)
+
+<b>Стакан:</b>
+• /orderbook - Получить текущий стакан
+• /start_monitoring - Запустить периодическую отправку
+• /stop_monitoring - Остановить отправку
+
+<b>Информация:</b>
+• /status - Текущие настройки
+• /help - Эта справка
+
+<b>Примеры использования:</b>
+1. Настройка: /ticker SBER → /depth 10 → /interval 30
+2. Тест: /orderbook
+3. Запуск мониторинга: /start_monitoring
+4. Остановка: /stop_monitoring
+"""
+    await update.message.reply_text(help_text, parse_mode='HTML')
+
+async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обработчик команды /status"""
+    ticker = bot_state.get('ticker', 'SBER')
+    depth = bot_state.get('depth', 5)
+    interval = bot_state.get('interval', 10)
+    monitoring = "✅ Запущен" if bot_state.get('monitoring_job') else "❌ Остановлен"
+    
+    status_text = f"""
+📊 <b>Текущие настройки:</b>
+
+📈 <b>Тикер:</b> {ticker}
+📏 <b>Глубина стакана:</b> {depth}
+⏰ <b>Интервал отправки:</b> {interval} секунд
+🔄 <b>Мониторинг:</b> {monitoring}
+
+<b>Используйте:</b>
+/orderbook - получить стакан сейчас
+/start_monitoring - запустить периодическую отправку
+/help - список всех команд
+"""
+    await update.message.reply_text(status_text, parse_mode='HTML')
+
+
+================================================================================
+ФАЙЛ: telegram_bot/handlers/orderbook.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/handlers/orderbook.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Обработчики команд для работы со стаканом
+"""
+
+import asyncio
+from telegram import Update
+from telegram.ext import ContextTypes, JobQueue
+from telegram_bot.config import bot_state
+from telegram_bot.services.orderbook_service import get_orderbook as get_orderbook_data, format_orderbook_message
+
+async def get_orderbook(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обработчик команды /orderbook"""
+    try:
+        # Получаем настройки из состояния
+        ticker = bot_state.get('ticker', 'SBER')
+        depth = bot_state.get('depth', 5)
+        
+        # Отправляем сообщение о начале получения
+        await update.message.reply_text(f"🔍 Получаю стакан {ticker}...")
+        
+        # Получаем данные стакана
+        orderbook_data = await get_orderbook_data(ticker, depth)
+        
+        if not orderbook_data:
+            await update.message.reply_text(f"❌ Не удалось получить стакан для {ticker}. Проверьте тикер или попробуйте позже.")
+            return
+        
+        # Форматируем и отправляем
+        message = await format_orderbook_message(orderbook_data)
+        await update.message.reply_text(message, parse_mode='HTML')
+        
+    except Exception as e:
+        await update.message.reply_text(f"❌ Ошибка: {str(e)[:100]}")
+
+async def send_orderbook_job(context: ContextTypes.DEFAULT_TYPE):
+    """Задача для периодической отправки стакана"""
+    try:
+        # Получаем настройки из состояния
+        ticker = bot_state.get('ticker', 'SBER')
+        depth = bot_state.get('depth', 5)
+        
+        # Получаем данные стакана
+        orderbook_data = await get_orderbook_data(ticker, depth)
+        
+        if not orderbook_data:
+            print(f"❌ Не удалось получить стакан для {ticker} в задаче мониторинга")
+            return
+        
+        # Форматируем сообщение
+        message = await format_orderbook_message(orderbook_data)
+        
+        # Отправляем сообщение
+        await context.bot.send_message(
+            chat_id=context.job.chat_id,
+            text=message,
+            parse_mode='HTML'
+        )
+        
+    except Exception as e:
+        print(f"❌ Ошибка в задаче мониторинга: {e}")
+
+async def start_monitoring(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обработчик команды /start_monitoring"""
+    try:
+        # Проверяем, не запущен ли уже мониторинг
+        if bot_state.get('monitoring_job'):
+            await update.message.reply_text("⚠️ Мониторинг уже запущен!")
+            return
+        
+        # Получаем настройки
+        ticker = bot_state.get('ticker', 'SBER')
+        depth = bot_state.get('depth', 5)
+        interval = bot_state.get('interval', 10)
+        
+        # Проверяем интервал
+        if interval < 1:
+            await update.message.reply_text("❌ Интервал должен быть не менее 1 секунды")
+            return
+        
+        # Создаем задачу для периодической отправки
+        job_queue = context.job_queue
+        
+        if job_queue is None:
+            await update.message.reply_text("❌ Ошибка: JobQueue не инициализирован")
+            return
+        
+        # Запускаем задачу
+        job = job_queue.run_repeating(
+            send_orderbook_job,
+            interval=interval,
+            first=1,
+            chat_id=update.effective_chat.id,
+            name=f"orderbook_monitoring_{ticker}"
+        )
+        
+        # Сохраняем задачу в состоянии
+        bot_state['monitoring_job'] = job
+        
+        await update.message.reply_text(
+            f"✅ Мониторинг запущен!\n\n"
+            f"📊 <b>Тикер:</b> {ticker}\n"
+            f"📏 <b>Глубина:</b> {depth}\n"
+            f"⏰ <b>Интервал:</b> {interval} сек\n\n"
+            f"Для остановки: /stop_monitoring",
+            parse_mode='HTML'
+        )
+        
+    except Exception as e:
+        await update.message.reply_text(f"❌ Ошибка запуска мониторинга: {str(e)[:100]}")
+
+async def stop_monitoring(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обработчик команды /stop_monitoring"""
+    try:
+        job = bot_state.get('monitoring_job')
+        if job:
+            job.schedule_removal()
+            bot_state['monitoring_job'] = None
+            await update.message.reply_text("✅ Мониторинг остановлен!")
+        else:
+            await update.message.reply_text("⚠️ Мониторинг не был запущен")
+    except Exception as e:
+        await update.message.reply_text(f"❌ Ошибка остановки мониторинга: {str(e)[:100]}")
+
+
+================================================================================
+ФАЙЛ: telegram_bot/handlers/settings.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/handlers/settings.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Обработчики команд настройки
+"""
+
+from telegram import Update
+from telegram.ext import ContextTypes
+from telegram_bot.config import bot_state
+
+async def set_ticker(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обработчик команды /ticker"""
+    if not context.args:
+        await update.message.reply_text("❌ Укажите тикер. Пример: /ticker SBER")
+        return
+    
+    ticker = context.args[0].upper().strip()
+    
+    # Простая валидация тикера
+    if not ticker.isalpha():
+        await update.message.reply_text("❌ Тикер должен содержать только буквы")
+        return
+    
+    if len(ticker) > 10:
+        await update.message.reply_text("❌ Тикер слишком длинный")
+        return
+    
+    # Сохраняем в состоянии
+    bot_state['ticker'] = ticker
+    
+    await update.message.reply_text(f"✅ Тикер установлен: <b>{ticker}</b>\n\nИспользуйте /orderbook для проверки", parse_mode='HTML')
+
+async def set_depth(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обработчик команды /depth"""
+    if not context.args:
+        await update.message.reply_text("❌ Укажите глубину. Пример: /depth 10")
+        return
+    
+    try:
+        depth = int(context.args[0])
+        
+        if depth < 1 or depth > 50:
+            await update.message.reply_text("❌ Глубина должна быть от 1 до 50")
+            return
+        
+        # Сохраняем в состоянии
+        bot_state['depth'] = depth
+        
+        await update.message.reply_text(f"✅ Глубина стакана установлена: <b>{depth}</b>", parse_mode='HTML')
+        
+    except ValueError:
+        await update.message.reply_text("❌ Глубина должна быть числом")
+
+async def set_interval(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Обработчик команды /interval"""
+    if not context.args:
+        await update.message.reply_text("❌ Укажите интервал. Пример: /interval 10")
+        return
+    
+    try:
+        interval = int(context.args[0])
+        
+        if interval < 1:
+            await update.message.reply_text("❌ Интервал должен быть не менее 1 секунды")
+            return
+        
+        if interval > 3600:
+            await update.message.reply_text("❌ Интервал должен быть не более 3600 секунд (1 час)")
+            return
+        
+        # Сохраняем в состоянии
+        bot_state['interval'] = interval
+        
+        # Если мониторинг запущен, нужно перезапустить его с новым интервалом
+        job = bot_state.get('monitoring_job')
+        if job:
+            job.schedule_removal()
+            bot_state['monitoring_job'] = None
+            await update.message.reply_text(
+                f"✅ Интервал установлен: <b>{interval}</b> секунд\n\n"
+                f"⚠️ Мониторинг был остановлен. Запустите снова: /start_monitoring",
+                parse_mode='HTML'
+            )
+        else:
+            await update.message.reply_text(f"✅ Интервал установлен: <b>{interval}</b> секунд", parse_mode='HTML')
+        
+    except ValueError:
+        await update.message.reply_text("❌ Интервал должен быть числом")
+
+
+================================================================================
+ФАЙЛ: telegram_bot/services/__init__.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/services/__init__.py
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: telegram_bot/services/orderbook_service.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/services/orderbook_service.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Сервис для получения стакана через Tinkoff API
+"""
+
+import asyncio
+from typing import Optional, Dict, Any
+from telegram_bot.services.tinkoff_service import get_tinkoff_service
+
+async def get_orderbook(ticker: str, depth: int = 5) -> Optional[Dict[str, Any]]:
+    """
+    Получает стакан по тикеру через Tinkoff API
+    
+    Args:
+        ticker: Тикер инструмента (например, 'SBER')
+        depth: Глубина стакана
+        
+    Returns:
+        Словарь с данными стакана или None при ошибке
+    """
+    try:
+        # Получаем сервис
+        service = await get_tinkoff_service()
+        
+        # Получаем стакан
+        orderbook_data = await service.get_orderbook(ticker, depth)
+        
+        return orderbook_data
+        
+    except Exception as e:
+        print(f"❌ Ошибка в get_orderbook: {e}")
+        return None
+
+async def format_orderbook_message(data: Dict[str, Any]) -> str:
+    """
+    Форматирует данные стакана для отправки в Telegram
+    
+    Args:
+        data: Данные стакана
+        
+    Returns:
+        Отформатированное сообщение
+    """
+    if not data:
+        return "❌ Не удалось получить данные стакана. Проверьте тикер и подключение к интернету."
+    
+    try:
+        service = await get_tinkoff_service()
+        return service.format_orderbook_for_telegram(data)
+    except Exception as e:
+        print(f"❌ Ошибка форматирования: {e}")
+        return "❌ Ошибка при форматировании данных стакана."
+
+
+================================================================================
+ФАЙЛ: telegram_bot/services/tinkoff_service.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/services/tinkoff_service.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Сервис для работы с Tinkoff API (асинхронный)
+Использует gRPC для получения стаканов
+"""
+
+import os
+import asyncio
+from datetime import datetime
+from typing import Optional, Dict, Any
+from pathlib import Path
+import sys
+
+# Добавляем корень проекта в путь Python
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+try:
+    from tinkoff.invest import AsyncClient
+    from tinkoff.invest.schemas import InstrumentStatus, InstrumentIdType
+    print("✅ Tinkoff библиотеки импортированы")
+except ImportError as e:
+    print(f"❌ Ошибка импорта Tinkoff: {e}")
+    raise
+
+class TinkoffService:
+    """Сервис для работы с Tinkoff Invest API"""
+    
+    def __init__(self):
+        self.token = os.getenv('INVEST_TOKEN')
+        if not self.token:
+            raise ValueError("❌ Токен Tinkoff API не найден в .env файле")
+        
+        self._client = None
+        print("🚀 TinkoffService инициализирован")
+    
+    async def __aenter__(self):
+        """Контекстный менеджер"""
+        self._client = AsyncClient(self.token)
+        await self._client.__aenter__()
+        return self
+    
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        """Завершение работы"""
+        if self._client:
+            await self._client.__aexit__(exc_type, exc_val, exc_tb)
+    
+    async def find_instrument_by_ticker(self, ticker: str):
+        """Находит инструмент по тикеру"""
+        try:
+            # Сначала получаем все акции
+            shares_response = await self._client.instruments.shares()
+            
+            # Ищем по точному тикеру
+            for instrument in shares_response.instruments:
+                if (instrument.ticker == ticker and 
+                    instrument.exchange == 'MOEX' and
+                    instrument.class_code == 'TQBR'):
+                    print(f"✅ Найдена акция: {instrument.name} ({instrument.ticker})")
+                    return instrument
+            
+            print(f"❌ Акция с тикером '{ticker}' не найдена на MOEX")
+            return None
+            
+        except Exception as e:
+            print(f"❌ Ошибка поиска инструмента '{ticker}': {e}")
+            return None
+    
+    async def get_orderbook(self, ticker: str, depth: int = 5) -> Optional[Dict[str, Any]]:
+        """
+        Получает стакан по тикеру
+        
+        Returns:
+            Словарь с данными стакана или None при ошибке
+        """
+        try:
+            instrument = await self.find_instrument_by_ticker(ticker)
+            if not instrument:
+                return None
+            
+            # Получаем стакан
+            orderbook = await self._client.market_data.get_order_book(
+                figi=instrument.figi,
+                depth=depth
+            )
+            
+            # Форматируем результат
+            result = {
+                'ticker': ticker,
+                'name': instrument.name,
+                'asks': [],
+                'bids': [],
+                'best_bid': None,
+                'best_ask': None,
+                'timestamp': datetime.now()
+            }
+            
+            # Обрабатываем аски (продажа)
+            if orderbook.asks:
+                result['best_ask'] = self._quotation_to_float(orderbook.best_ask_price)
+                for ask in orderbook.asks[:depth]:
+                    price = self._quotation_to_float(ask.price)
+                    quantity = ask.quantity
+                    result['asks'].append({
+                        'price': price,
+                        'quantity': quantity
+                    })
+            
+            # Обрабатываем биды (покупка)
+            if orderbook.bids:
+                result['best_bid'] = self._quotation_to_float(orderbook.best_bid_price)
+                for bid in orderbook.bids[:depth]:
+                    price = self._quotation_to_float(bid.price)
+                    quantity = bid.quantity
+                    result['bids'].append({
+                        'price': price,
+                        'quantity': quantity
+                    })
+            
+            return result
+            
+        except Exception as e:
+            print(f"❌ Ошибка получения стакана '{ticker}': {e}")
+            return None
+    
+    def _quotation_to_float(self, quotation) -> float:
+        """Конвертирует Quotation в float"""
+        if hasattr(quotation, 'units') and hasattr(quotation, 'nano'):
+            return quotation.units + quotation.nano / 1e9
+        return float(quotation) if quotation else 0.0
+    
+    def format_orderbook_for_telegram(self, data: Dict[str, Any]) -> str:
+        """Форматирует стакан для отправки в Telegram"""
+        if not data:
+            return "❌ Не удалось получить данные стакана"
+        
+        # Создаём заголовок
+        timestamp = data['timestamp'].strftime('%H:%M:%S')
+        message = f"📊 <b>СТАКАН {data['ticker']}</b>\n"
+        message += f"<i>{data['name']}</i>\n\n"
+        
+        # Продажа (asks)
+        if data['asks']:
+            message += "💰 <b>ПРОДАЖА:</b>\n"
+            for ask in data['asks'][:5]:  # Только первые 5 уровней
+                message += f"  {ask['price']:>8.2f} | {ask['quantity']:>6} лотов\n"
+        else:
+            message += "💰 <b>ПРОДАЖА:</b> нет данных\n"
+        
+        message += "\n"
+        
+        # Покупка (bids)
+        if data['bids']:
+            message += "🛒 <b>ПОКУПКА:</b>\n"
+            for bid in data['bids'][:5]:
+                message += f"  {bid['price']:>8.2f} | {bid['quantity']:>6} лотов\n"
+        else:
+            message += "🛒 <b>ПОКУПКА:</b> нет данных\n"
+        
+        message += "\n"
+        
+        # Спред и время
+        if data['best_bid'] and data['best_ask']:
+            spread = data['best_ask'] - data['best_bid']
+            spread_percent = (spread / data['best_bid']) * 100
+            message += f"💎 <b>Спрос:</b> {data['best_bid']:.2f}\n"
+            message += f"💎 <b>Предложение:</b> {data['best_ask']:.2f}\n"
+            message += f"📏 <b>Спред:</b> {spread:.2f} ({spread_percent:.2f}%)\n"
+        
+        message += f"⏰ <i>{timestamp}</i>"
+        
+        return message
+
+# Глобальный экземпляр сервиса (для удобства)
+_tinkoff_service = None
+
+async def get_tinkoff_service():
+    """Получает или создаёт экземпляр TinkoffService"""
+    global _tinkoff_service
+    if _tinkoff_service is None:
+        _tinkoff_service = TinkoffService()
+        await _tinkoff_service.__aenter__()
+    return _tinkoff_service
+
+async def close_tinkoff_service():
+    """Закрывает соединение с Tinkoff"""
+    global _tinkoff_service
+    if _tinkoff_service:
+        await _tinkoff_service.__aexit__(None, None, None)
+        _tinkoff_service = None
+def format_orderbook_for_telegram(data: Dict[str, Any]) -> str:
+    """Статическая функция для форматирования стакана"""
+    if not data:
+        return "❌ Не удалось получить данные стакана"
+    
+    # Создаём заголовок
+    timestamp = data['timestamp'].strftime('%H:%M:%S')
+    message = f"📊 <b>СТАКАН {data['ticker']}</b>\n"
+    message += f"<i>{data['name']}</i>\n\n"
+    
+    # Продажа (asks)
+    if data['asks']:
+        message += "💰 <b>ПРОДАЖА:</b>\n"
+        for ask in data['asks'][:5]:  # Только первые 5 уровней
+            message += f"  {ask['price']:>8.2f} | {ask['quantity']:>6} лотов\n"
+    else:
+        message += "💰 <b>ПРОДАЖА:</b> нет данных\n"
+    
+    message += "\n"
+    
+    # Покупка (bids)
+    if data['bids']:
+        message += "🛒 <b>ПОКУПКА:</b>\n"
+        for bid in data['bids'][:5]:
+            message += f"  {bid['price']:>8.2f} | {bid['quantity']:>6} лотов\n"
+    else:
+        message += "🛒 <b>ПОКУПКА:</b> нет данных\n"
+    
+    message += "\n"
+    
+    # Спред и время
+    if data['best_bid'] and data['best_ask']:
+        spread = data['best_ask'] - data['best_bid']
+        spread_percent = (spread / data['best_bid']) * 100
+        message += f"💎 <b>Спрос:</b> {data['best_bid']:.2f}\n"
+        message += f"💎 <b>Предложение:</b> {data['best_ask']:.2f}\n"
+        message += f"📏 <b>Спред:</b> {spread:.2f} ({spread_percent:.2f}%)\n"
+    
+    message += f"⏰ <i>{timestamp}</i>"
+    
+    return message
+
+
+================================================================================
+ФАЙЛ: telegram_bot/utils/__init__.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/utils/__init__.py
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: telegram_bot/utils/formatters.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/utils/formatters.py
+================================================================================
+
+"""
+Форматирование сообщений для Telegram
+"""
+
+def format_settings_message(ticker: str, depth: int, interval: int, is_monitoring: bool) -> str:
+    """
+    Форматирует сообщение с текущими настройками
+    """
+    status = "🟢 ВКЛ" if is_monitoring else "🔴 ВЫКЛ"
+    
+    message = (
+        f"⚙️ ТЕКУЩИЕ НАСТРОЙКИ:\n\n"
+        f"📈 Тикер: {ticker}\n"
+        f"📊 Глубина стакана: {depth}\n"
+        f"⏱ Интервал отправки: {interval} сек.\n"
+        f"📡 Мониторинг: {status}\n"
+    )
+    return message
+
+
+================================================================================
+ФАЙЛ: telegram_bot/utils/validators.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/telegram_bot/utils/validators.py
+================================================================================
+
+"""
+Валидация ввода пользователя
+"""
+
+def validate_ticker(ticker: str) -> bool:
+    """
+    Простая валидация тикера: только буквы и цифры, длина 2-10
+    """
+    if not ticker:
+        return False
+    if len(ticker) < 2 or len(ticker) > 10:
+        return False
+    if not ticker.isalnum():
+        return False
+    return True
+
+def validate_depth(depth: int) -> bool:
+    """
+    Глубина стакана: от 1 до 50
+    """
+    return 1 <= depth <= 50
+
+def validate_interval(interval: int) -> bool:
+    """
+    Интервал отправки: от 1 до 3600 секунд
+    """
+    return 1 <= interval <= 3600
+
+
+================================================================================
+ФАЙЛ: tests/__init__.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/tests/__init__.py
+================================================================================
+
+
+
+================================================================================
+ФАЙЛ: tests/final_structure_test.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/tests/final_structure_test.py
+================================================================================
+
+import sys
+import os
+
+# Добавляем src в путь Python
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
+def test_imports():
+    """Тестируем возможность импортировать наши модули"""
+    print("🧪 Тестируем импорты...")
+    
+    try:
+        from src.utils.logger import log
+        print("✅ src.utils.logger - ОК")
+    except ImportError as e:
+        print(f"❌ src.utils.logger: {e}")
+    
+    try:
+        from src.data_feed.moex_client import MOEXClient
+        print("✅ src.data_feed.moex_client - ОК")
+    except ImportError as e:
+        print(f"❌ src.data_feed.moex_client: {e}")
+    
+    try:
+        import pandas as pd
+        print("✅ pandas - ОК")
+    except ImportError as e:
+        print(f"❌ pandas: {e}")
+    
+    print("\n🎯 Тест импортов завершён")
+
+if __name__ == "__main__":
+    test_imports()
+
+
+================================================================================
+ФАЙЛ: tests/test_basic.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/tests/test_basic.py
+================================================================================
+
+# test_basic.py
+import pandas as pd
+import numpy as np
+import requests
+import ccxt
+
+print("✅ Все основные библиотеки работают!")
+
+# Проверяем данные
+data = pd.DataFrame({
+    'price': [100, 101, 102, 101, 103],
+    'volume': [1000, 1500, 1200, 1800, 2000]
+})
+
+print("📊 Тестовые данные:")
+print(data)
+print(f"📈 Средняя цена: {data['price'].mean():.2f}")
+
+# Проверяем requests
+response = requests.get('https://httpbin.org/json')
+print(f"🌐 HTTP запрос: {response.status_code}")
+
+================================================================================
+ФАЙЛ: tests/test_debug.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/tests/test_debug.py
+================================================================================
+
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+from tinkoff.invest import Client
+
+token = os.getenv('INVEST_TOKEN')
+with Client(token) as client:
+    # Тестируем разные варианты вызова
+    from tinkoff.invest.schemas import GetOrderBookRequest
+    
+    # Вариант 1
+    try:
+        request = GetOrderBookRequest(figi="BBG004730N88", depth=5)
+        result = client.market_data.get_order_book(request)
+        print("✅ Вариант 1 с GetOrderBookRequest работает")
+    except Exception as e:
+        print(f"❌ Вариант 1: {e}")
+    
+    # Вариант 2  
+    try:
+        result = client.market_data.get_order_book(figi="BBG004730N88", depth=5)
+        print("✅ Вариант 2 с прямыми параметрами работает")
+    except Exception as e:
+        print(f"❌ Вариант 2: {e}")
+
+
+
+================================================================================
+ФАЙЛ: tests/test_fixed_imports.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/tests/test_fixed_imports.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Тест импортов после исправлений
+"""
+
+import sys
+from pathlib import Path
+
+# Добавляем корень проекта в путь Python
+project_root = Path(__file__).parent
+sys.path.insert(0, str(project_root))
+
+print("🔍 Проверяем исправленные импорты...")
+
+try:
+    from telegram_bot.config import bot_state, TELEGRAM_BOT_TOKEN
+    print("✅ config.py")
+except Exception as e:
+    print(f"❌ config.py: {e}")
+
+try:
+    from telegram_bot.handlers.basic import start, help_command, status
+    print("✅ handlers.basic")
+except Exception as e:
+    print(f"❌ handlers.basic: {e}")
+
+try:
+    from telegram_bot.handlers.settings import set_ticker, set_depth, set_interval
+    print("✅ handlers.settings")
+except Exception as e:
+    print(f"❌ handlers.settings: {e}")
+
+try:
+    from telegram_bot.handlers.orderbook import get_orderbook, start_monitoring, stop_monitoring
+    print("✅ handlers.orderbook")
+except Exception as e:
+    print(f"❌ handlers.orderbook: {e}")
+
+try:
+    from telegram_bot.services.orderbook_service import get_orderbook as get_orderbook_data, format_orderbook_message
+    print("✅ services.orderbook_service")
+except Exception as e:
+    print(f"❌ services.orderbook_service: {e}")
+
+try:
+    from telegram_bot.services.tinkoff_service import get_tinkoff_service, format_orderbook_for_telegram
+    print("✅ services.tinkoff_service")
+except Exception as e:
+    print(f"❌ services.tinkoff_service: {e}")
+
+print("\n🎯 Проверка импортов завершена!")
+
+
+================================================================================
+ФАЙЛ: tests/test_imports.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/tests/test_imports.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Тест импортов всех модулей бота
+"""
+
+import sys
+from pathlib import Path
+
+# Добавляем корень проекта в путь Python
+project_root = Path(__file__).parent
+sys.path.insert(0, str(project_root))
+
+print("🔍 Проверяем импорты модулей бота...")
+
+try:
+    from telegram_bot.config import bot_state, TELEGRAM_BOT_TOKEN
+    print("✅ config.py")
+except Exception as e:
+    print(f"❌ config.py: {e}")
+
+try:
+    from telegram_bot.handlers.basic import start, help_command, status
+    print("✅ handlers.basic")
+except Exception as e:
+    print(f"❌ handlers.basic: {e}")
+
+try:
+    from telegram_bot.handlers.settings import set_ticker, set_depth, set_interval
+    print("✅ handlers.settings")
+except Exception as e:
+    print(f"❌ handlers.settings: {e}")
+
+try:
+    from telegram_bot.handlers.orderbook import get_orderbook, start_monitoring, stop_monitoring
+    print("✅ handlers.orderbook")
+except Exception as e:
+    print(f"❌ handlers.orderbook: {e}")
+
+try:
+    from telegram_bot.services.orderbook_service import get_orderbook as get_orderbook_data
+    print("✅ services.orderbook_service")
+except Exception as e:
+    print(f"❌ services.orderbook_service: {e}")
+
+print("\n🎯 Проверка импортов завершена!")
+
+
+================================================================================
+ФАЙЛ: tests/test_instruments.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/tests/test_instruments.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Тест поиска инструментов
+"""
+
+import os
+import sys
+from dotenv import load_dotenv
+
+# Добавляем src в путь Python
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+load_dotenv()
+
+def main():
+    print("🧪 Тестируем поиск инструментов...")
+    
+    token = os.getenv('INVEST_TOKEN')
+    if not token:
+        print("❌ Токен не найден")
+        return
+    
+    try:
+        from tinkoff.invest import Client
+        from tinkoff.invest.schemas import InstrumentStatus
+        
+        with Client(token) as client:
+            # Тестируем поиск SBER
+            instruments = client.instruments.find_instrument(query="SBER")
+            print(f"🔍 Найдено инструментов по SBER: {len(instruments.instruments)}")
+            
+            for i, instrument in enumerate(instruments.instruments[:3]):  # Покажем первые 3
+                print(f"\nИнструмент {i+1}:")
+                print(f"  Тикер: {instrument.ticker}")
+                print(f"  Название: {instrument.name}")
+                print(f"  FIGI: {instrument.figi}")
+                print(f"  State: {instrument.state}")
+                print(f"  Status: {InstrumentStatus(instrument.state).name}")
+                
+                # Покажем все атрибуты объекта
+                print(f"  Все атрибуты: {[attr for attr in dir(instrument) if not attr.startswith('_')]}")
+                
+    except Exception as e:
+        print(f"❌ Ошибка: {e}")
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+ФАЙЛ: tests/test_orderbook.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/tests/test_orderbook.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Простой тест стакана - запускать из корневой папки проекта
+"""
+
+import sys
+import os
+
+# Добавляем src в путь Python
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+from data_feed.orderbook import MOEXOrderbook
+
+def main():
+    print("🧪 Тестируем стакан...")
+    
+    client = MOEXOrderbook()
+    
+    # Тестируем на SBER (он всегда торгуется)
+    print("🔍 Проверяем стакан SBER...")
+    client.print_pretty_orderbook("SBER")
+    
+    # Тестируем на GAZP
+    print("\n🔍 Проверяем стакан GAZP...")
+    client.print_pretty_orderbook("GAZP")
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+ФАЙЛ: tests/test_setup.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/tests/test_setup.py
+================================================================================
+
+print("🎉 Виртуальное окружение работает!")
+print("Вы в папке:", __file__)
+
+import sys
+print("Python путь:", sys.executable)
+
+# Проверим основные библиотеки
+try:
+    import pandas as pd
+    print("✅ pandas установлен")
+except ImportError:
+    print("❌ pandas НЕ установлен")
+
+try:
+    import numpy as np
+    print("✅ numpy установлен") 
+except ImportError:
+    print("❌ numpy НЕ установлен")
+
+
+================================================================================
+ФАЙЛ: tests/test_tinkoff.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/tests/test_tinkoff.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Тест Tinkoff API - запускать из корневой папки проекта
+"""
+
+import sys
+import os
+
+# Добавляем src в путь Python
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+from data_feed.tinkoff_client import TinkoffAPIClient
+
+def main():
+    print("🧪 Тестируем Tinkoff API...")
+    
+    try:
+        client = TinkoffAPIClient()
+        
+        # Тестируем на SBER
+        print("🔍 Проверяем стакан SBER...")
+        client.print_pretty_orderbook("SBER")
+        
+        # Тестируем на GAZP
+        print("\n🔍 Проверяем стакан GAZP...")
+        client.print_pretty_orderbook("GAZP")
+        
+    except Exception as e:
+        print(f"❌ Критическая ошибка: {e}")
+        print("ℹ️  Проверьте:")
+        print("   - Токен в .env файле")
+        print("   - Подключение к интернету")
+        print("   - Правильность формата токена")
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+ФАЙЛ: tests/test_tinkoff_simple.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/tests/test_tinkoff_simple.py
+================================================================================
+
+#!/usr/bin/env python3
+"""
+Простой тест Tinkoff API (боевой контур)
+"""
+
+import os
+import sys
+from dotenv import load_dotenv
+
+# Добавляем src в путь Python
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
+
+load_dotenv()
+
+def main():
+    print("🧪 Тестируем подключение к Tinkoff API...")
+    
+    token = os.getenv('INVEST_TOKEN')
+    if not token:
+        print("❌ Токен не найден в .env файле")
+        return
+    
+    try:
+        from tinkoff.invest import Client
+        
+        with Client(token) as client:
+            # Проверяем доступные счета
+            accounts = client.users.get_accounts()
+            print("✅ Подключение успешно!")
+            print(f"📋 Найдено счетов: {len(accounts.accounts)}")
+            
+            for account in accounts.accounts:
+                print(f"   - {account.name} (ID: {account.id})")
+                
+    except Exception as e:
+        print(f"❌ Ошибка подключения: {e}")
+
+if __name__ == "__main__":
+    main()
+
+
+================================================================================
+ФАЙЛ: tests/test_vscode.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/tests/test_vscode.py
+================================================================================
+
+import sys
+print("🎯 VSCode тест запущен!")
+print(f"Python путь: {sys.executable}")
+print(f"Версия Python: {sys.version}")
+
+if "trading_env" in sys.executable:
+    print("✅ Работаем в виртуальном окружении!")
+else:
+    print("❌ НЕ в виртуальном окружении!")
+
+import os
+print(f"📁 Путь: {os.getcwd()}")
+
+
+================================================================================
+📊 СТАТИСТИКА ЭКСПОРТА
+================================================================================
+Всего файлов: 58
+Общий размер кода: 107408 байт (104.9 КБ)
+Дата экспорта: 2025-12-12 00:59:10
+================================================================================
+
+🎯 ИНСТРУКЦИЯ ДЛЯ АНАЛИЗА:
+1. Ищите конкретные файлы по строке "ФАЙЛ: "
+2. Все пути указаны относительно: /Users/vladimirbasov/Desktop/python_trading
+3. Для навигации используйте поиск по имени файла
+4. .env файлы очищены от секретов
+
+================================================================================
+КОНЕЦ ЭКСПОРТА
+================================================================================
