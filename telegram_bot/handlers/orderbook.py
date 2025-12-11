@@ -5,7 +5,7 @@
 
 import asyncio
 from telegram import Update
-from telegram.ext import ContextTypes
+from telegram.ext import ContextTypes, JobQueue
 from telegram_bot.config import bot_state
 from telegram_bot.services.orderbook_service import get_orderbook as get_orderbook_data, format_orderbook_message
 
@@ -21,6 +21,10 @@ async def get_orderbook(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         # Получаем данные стакана
         orderbook_data = await get_orderbook_data(ticker, depth)
+        
+        if not orderbook_data:
+            await update.message.reply_text(f"❌ Не удалось получить стакан для {ticker}. Проверьте тикер или попробуйте позже.")
+            return
         
         # Форматируем и отправляем
         message = await format_orderbook_message(orderbook_data)
@@ -38,6 +42,10 @@ async def send_orderbook_job(context: ContextTypes.DEFAULT_TYPE):
         
         # Получаем данные стакана
         orderbook_data = await get_orderbook_data(ticker, depth)
+        
+        if not orderbook_data:
+            print(f"❌ Не удалось получить стакан для {ticker} в задаче мониторинга")
+            return
         
         # Форматируем сообщение
         message = await format_orderbook_message(orderbook_data)
@@ -72,6 +80,10 @@ async def start_monitoring(update: Update, context: ContextTypes.DEFAULT_TYPE):
         
         # Создаем задачу для периодической отправки
         job_queue = context.job_queue
+        
+        if job_queue is None:
+            await update.message.reply_text("❌ Ошибка: JobQueue не инициализирован")
+            return
         
         # Запускаем задачу
         job = job_queue.run_repeating(

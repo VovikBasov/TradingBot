@@ -48,7 +48,7 @@ def create_application():
     
     return application
 
-async def main():
+def main():
     """Основная функция запуска бота"""
     print("🤖 Бот запускается...")
     
@@ -61,20 +61,19 @@ async def main():
         # Создаём приложение
         application = create_application()
         
-        # Запускаем бота
+        # Запускаем бота с правильным методом для версии 22.5
         print("✅ Бот инициализирован")
         print("📡 Запускаем polling... (Ctrl+C для остановки)")
         
-        await application.initialize()
-        await application.start()
-        await application.updater.start_polling()
+        # Для python-telegram-bot 22.5 используем run_polling
+        application.run_polling()
         
-        # Запускаем бесконечный цикл
-        await application.idle()
-        
+    except KeyboardInterrupt:
+        print("\n\n⏹️  Бот остановлен пользователем (Ctrl+C)")
     except Exception as e:
         print(f"❌ Ошибка запуска бота: {e}")
+        import traceback
+        traceback.print_exc()
 
 if __name__ == "__main__":
-    # Запускаем асинхронную функцию
-    asyncio.run(main())
+    main()
