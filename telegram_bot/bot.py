@@ -23,6 +23,7 @@ from telegram_bot.handlers.basic import start, help_command, status
 from telegram_bot.handlers.settings import set_ticker, set_depth, set_interval
 from telegram_bot.handlers.orderbook import get_orderbook, start_monitoring, stop_monitoring
 from telegram_bot.config import bot_state, TELEGRAM_CHAT_ID, send_notification
+from src.utils.logger import log, log_business, log_command
 
 # Загружаем переменные окружения
 load_dotenv()
@@ -38,19 +39,20 @@ async def send_startup_message(bot):
     if TELEGRAM_CHAT_ID and TELEGRAM_CHAT_ID != 'ваш_chat_id_сюда':
         message = "🤖 <b>Бот проснулся!</b>\n\nДля начала работы отправьте команду /start"
         await send_notification(bot, message)
-        print("✅ Сообщение о запуске отправлено")
+        log.info("Сообщение о запуске отправлено")
+        log_business("bot", "startup", "system")
 
 async def send_shutdown_message(bot):
     """Отправляет сообщение об остановке бота"""
     if TELEGRAM_CHAT_ID and TELEGRAM_CHAT_ID != 'ваш_chat_id_сюда':
         message = "😴 <b>Бот ушёл спать</b>\n\nДля возобновления работы перезапустите бота"
         await send_notification(bot, message)
-        print("✅ Сообщение об остановке отправлено")
+        log.info("Сообщение об остановке отправлено")
+        log_business("bot", "shutdown", "system")
 
 def signal_handler(signum, frame):
     """Обработчик сигналов завершения"""
-    print(f"\n⚠️  Получен сигнал {signum}, завершаем работу...")
-    # Просто устанавливаем событие, чтобы основной цикл завершился
+    log.warning(f"Получен сигнал завершения {signum}")
     shutdown_event.set()
 
 def create_application():
@@ -75,17 +77,15 @@ def create_application():
 
 async def main_async():
     """Асинхронная основная функция"""
-    print("🤖 Бот запускается...")
+    log.info("🤖 Бот запускается...")
+    log_business("bot", "start", "system")
     
     if not TELEGRAM_BOT_TOKEN or "ваш_токен" in TELEGRAM_BOT_TOKEN:
-        print("❌ Токен бота не настроен!")
-        print("   Проверьте TELEGRAM_BOT_TOKEN в .env файле")
+        log.error("Токен бота не настроен!")
         return
     
     if not TELEGRAM_CHAT_ID or "ваш_chat_id" in TELEGRAM_CHAT_ID:
-        print("⚠️  Chat ID не настроен!")
-        print("   Проверьте TELEGRAM_CHAT_ID в .env файле")
-        print("   Можно запустить: python telegram_bot/get_chat_id.py")
+        log.warning("Chat ID не настроен!")
     
     try:
         # Создаём приложение
@@ -99,38 +99,36 @@ async def main_async():
         # Устанавливаем флаг работы
         bot_state['is_running'] = True
         
-        print("✅ Бот инициализирован")
-        print("🔄 JobQueue инициализирована")
+        log.info("Бот инициализирован")
+        log.info("JobQueue инициализирована")
         
         # Отправляем сообщение о запуске
         await send_startup_message(application.bot)
         
-        print("📡 Бот запущен и работает... (Ctrl+C для остановки)")
+        log.info("📡 Бот запущен и работает... (Ctrl+C для остановки)")
         
         # Ждем сигнала завершения
         await shutdown_event.wait()
         
-        print("\n🔄 Завершаем работу...")
+        log.info("Завершаем работу...")
         
         # Останавливаем бота
         await application.updater.stop()
         await application.stop()
         
-        print("👋 Бот завершил работу")
+        log.info("👋 Бот завершил работу")
         
     except KeyboardInterrupt:
-        print("\n\n⏹️  Бот остановлен пользователем (Ctrl+C)")
-        # Отправляем сообщение об остановке только при ручной остановке
+        log.warning("Бот остановлен пользователем (Ctrl+C)")
         if 'application' in locals():
             await send_shutdown_message(application.bot)
             await application.updater.stop()
             await application.stop()
     except Exception as e:
-        print(f"❌ Ошибка запуска бота: {e}")
-        import traceback
-        traceback.print_exc()
+        log.error(f"Ошибка запуска бота: {e}")
     finally:
         bot_state['is_running'] = False
+        log_business("bot", "stop", "system")
 
 def main():
     """Основная функция запуска бота"""
@@ -142,9 +140,9 @@ def main():
         # Запускаем асинхронную основную функцию
         asyncio.run(main_async())
     except KeyboardInterrupt:
-        print("\n👋 Завершение работы...")
+        log.info("Завершение работы...")
     except Exception as e:
-        print(f"❌ Критическая ошибка: {e}")
+        log.error(f"Критическая ошибка: {e}")
 
 if __name__ == "__main__":
     main()

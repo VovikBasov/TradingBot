@@ -6,9 +6,14 @@
 from telegram import Update
 from telegram.ext import ContextTypes
 from telegram_bot.config import bot_state
+from src.utils.logger import log_command, log_business
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработчик команды /start"""
+    user_id = str(update.effective_user.id)
+    log_command("start", user_id)
+    log_business("bot", "user_start", user_id, username=update.effective_user.username)
+    
     welcome_text = """
 🤖 <b>Торговый бот для получения стакана</b>
 
@@ -38,6 +43,9 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработчик команды /help"""
+    user_id = str(update.effective_user.id)
+    log_command("help", user_id)
+    
     help_text = """
 📚 <b>Справка по командам</b>
 
@@ -65,6 +73,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработчик команды /status"""
+    user_id = str(update.effective_user.id)
+    log_command("status", user_id)
+    
     ticker = bot_state.get('ticker', 'SBER')
     depth = bot_state.get('depth', 5)
     interval = bot_state.get('interval', 10)
