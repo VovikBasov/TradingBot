@@ -99,28 +99,8 @@ class TinkoffService:
             return quotation.units + quotation.nano / 1e9
         return float(quotation) if quotation else 0.0
 
-    def calculate_spread(self, data: Dict[str, Any]) -> str:
-        """Рассчитывает спред между лучшей ценой продажи и покупки"""
-        if not data.get('asks') or not data.get('bids'):
-            return ""  # Нет данных для расчета спреда
-        
-        try:
-            # Лучшая цена продажи (самая низкая в asks)
-            best_ask = min(ask['price'] for ask in data['asks'])
-            # Лучшая цена покупки (самая высокая в bids)
-            best_bid = max(bid['price'] for bid in data['bids'])
-            
-            # Рассчитываем спред
-            spread = best_ask - best_bid
-            
-            # Форматируем вывод
-            return f"📏 <b>Spread:</b> {spread:.2f}"
-        
-        except (ValueError, KeyError) as e:
-            return ""  # Если что-то пошло не так, просто не показываем спред
-
     def format_orderbook_for_telegram(self, data: Dict[str, Any]) -> str:
-        """Форматирует стакан для Telegram (с лучшими ценами и спредом)"""
+        """Форматирует ТОЛЬКО стакан для Telegram (без лучших цен и спреда)"""
         if not data or (not data['asks'] and not data['bids']):
             return f"❌ Не удалось получить стакан для {data.get('ticker', 'тикера')} или стакан пуст."
         timestamp = data['timestamp'].strftime('%H:%M:%S')
@@ -132,21 +112,13 @@ class TinkoffService:
                 message += f"{ask['price']:>8.2f} | {ask['quantity']:>5} лотов\n"
         else:
             message += "<b>SELL:</b> нет данных\n"
-        
         message += "\n"
-        
         if data['bids']:
             message += "<b>BUY:</b>\n"
             for bid in data['bids']:
                 message += f"{bid['price']:>8.2f} | {bid['quantity']:>5} лотов\n"
         else:
             message += "<b>BUY:</b> нет данных\n"
-        
-        # РАССЧИТЫВАЕМ И ДОБАВЛЯЕМ СПРЕД
-        spread_text = self.calculate_spread(data)
-        if spread_text:
-            message += "\n" + spread_text
-        
         return message
 
 # Глобальный экземпляр сервиса

@@ -95,35 +95,9 @@ class TinkoffGrpcFastClient:
             return quotation.units + quotation.nano / 1e9
         return float(quotation) if quotation else 0.0
 
-    def print_spread_and_best_prices(self, orderbook):
-        """Рассчитывает и выводит лучшие цены и спред"""
-        try:
-            best_ask = None
-            best_bid = None
-            
-            # Лучшая цена продажи (первая в асках)
-            if hasattr(orderbook, 'asks') and orderbook.asks:
-                best_ask = self._quotation_to_float(orderbook.asks[0].price)
-                print(f"💎 Лучшая продажа (ask): {best_ask:.2f}")
-            
-            # Лучшая цена покупки (первая в бидах)
-            if hasattr(orderbook, 'bids') and orderbook.bids:
-                best_bid = self._quotation_to_float(orderbook.bids[0].price)
-                print(f"💎 Лучшая покупка (bid): {best_bid:.2f}")
-            
-            # Рассчитываем спред
-            if best_ask is not None and best_bid is not None:
-                spread = best_ask - best_bid
-                print(f"📏 Spread: {spread:.2f}")
-            else:
-                print("📏 Spread: недостаточно данных")
-                
-        except Exception as e:
-            print(f"⚠️  Ошибка расчета спреда: {e}")
-
     def print_pretty_orderbook(self, data):
         """
-        Красиво печатает стакан (с лучшими ценами и спредом)
+        Красиво печатает стакан (без лучших цен и спреда)
         """
         if not data:
             print(f"❌ Нет данных стакана")
@@ -164,8 +138,7 @@ class TinkoffGrpcFastClient:
             print("🛒 ПОКУПКА: пусто")
 
         print(f"{'='*60}")
-        # Выводим лучшие цены и спред
-        self.print_spread_and_best_prices(orderbook)
+        # Убрали блок с лучшими ценами и спредом
         print(f"{'='*60}")
 
 # СИНХРОННЫЕ ФУНКЦИИ ДЛЯ КОМАНДНОЙ СТРОКИ
@@ -214,7 +187,7 @@ def main():
 
 Команды:
   test [тикер]       - Тест подключения и поиска инструмента
-  get [тикер] [глуб] - Получить стакан (глубина по умолчания: 5)
+  get [тикер] [глуб] - Получить стакан (глубина по умолчанию: 5)
 
 Примеры:
   python scripts/tinkoff_grpc_client_fixed.py test SBER
