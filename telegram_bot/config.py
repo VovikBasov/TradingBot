@@ -23,6 +23,7 @@ bot_state = {
     'depth': int(os.getenv('DEFAULT_DEPTH', 5)),
     'interval': int(os.getenv('DEFAULT_INTERVAL', 10)),
     'monitoring_job': None,  # Задача мониторинга
+    'job_queue': None,       # JobQueue для планирования задач
     'is_running': False      # Флаг работы бота
 }
 

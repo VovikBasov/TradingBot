@@ -7,6 +7,7 @@
 import os
 import sys
 import asyncio
+import signal
 from pathlib import Path
 
 # Добавляем корень проекта в путь Python
@@ -54,7 +55,7 @@ def signal_handler(signum, frame):
 
 def create_application():
     """Создаёт и настраивает приложение бота"""
-    # Создаём приложение
+    # Создаём приложение с JobQueue
     app = Application.builder().token(TELEGRAM_BOT_TOKEN).build()
     
     # Добавляем обработчики команд
@@ -90,18 +91,16 @@ async def main_async():
         # Создаём приложение
         application = create_application()
         
+        # Инициализируем JobQueue вручную
+        await application.initialize()
+        await application.start()
+        await application.updater.start_polling()
+        
         # Устанавливаем флаг работы
         bot_state['is_running'] = True
         
-        # Запускаем бота
         print("✅ Бот инициализирован")
-        
-        # Инициализируем и запускаем бота
-        await application.initialize()
-        await application.start()
-        
-        # Создаем задачу для polling
-        polling_task = asyncio.create_task(application.updater.start_polling())
+        print("🔄 JobQueue инициализирована")
         
         # Отправляем сообщение о запуске
         await send_startup_message(application.bot)
@@ -113,11 +112,8 @@ async def main_async():
         
         print("\n🔄 Завершаем работу...")
         
-        # НЕ отправляем сообщение об остановке здесь - его отправит manage_bot.py
-        # await send_shutdown_message(application.bot)
-        print("ℹ️  Сообщение об остановке будет отправлено менеджером")
-        
         # Останавливаем бота
+        await application.updater.stop()
         await application.stop()
         
         print("👋 Бот завершил работу")
@@ -127,6 +123,7 @@ async def main_async():
         # Отправляем сообщение об остановке только при ручной остановке
         if 'application' in locals():
             await send_shutdown_message(application.bot)
+            await application.updater.stop()
             await application.stop()
     except Exception as e:
         print(f"❌ Ошибка запуска бота: {e}")
@@ -137,9 +134,6 @@ async def main_async():
 
 def main():
     """Основная функция запуска бота"""
-    # Импортируем signal только в синхронном контексте
-    import signal
-    
     # Регистрируем обработчики сигналов
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
