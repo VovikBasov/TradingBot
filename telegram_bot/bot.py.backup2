@@ -7,6 +7,7 @@
 import os
 import sys
 import asyncio
+import signal
 from pathlib import Path
 
 # Добавляем корень проекта в путь Python
@@ -29,28 +30,42 @@ load_dotenv()
 # Получаем конфигурацию
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
-# Флаг для управления остановкой
-shutdown_event = asyncio.Event()
+# Глобальная переменная для приложения
+application = None
 
-async def send_startup_message(bot):
+async def send_startup_message():
     """Отправляет сообщение о запуске бота"""
-    if TELEGRAM_CHAT_ID and TELEGRAM_CHAT_ID != 'ваш_chat_id_сюда':
+    global application
+    if application and application.bot:
         message = "🤖 <b>Бот проснулся!</b>\n\nДля начала работы отправьте команду /start"
-        await send_notification(bot, message)
+        await send_notification(application.bot, message)
         print("✅ Сообщение о запуске отправлено")
 
-async def send_shutdown_message(bot):
+async def send_shutdown_message():
     """Отправляет сообщение об остановке бота"""
-    if TELEGRAM_CHAT_ID and TELEGRAM_CHAT_ID != 'ваш_chat_id_сюда':
+    global application
+    if application and application.bot:
         message = "😴 <b>Бот ушёл спать</b>\n\nДля возобновления работы перезапустите бота"
-        await send_notification(bot, message)
+        await send_notification(application.bot, message)
         print("✅ Сообщение об остановке отправлено")
 
 def signal_handler(signum, frame):
     """Обработчик сигналов завершения"""
     print(f"\n⚠️  Получен сигнал {signum}, завершаем работу...")
-    # Просто устанавливаем событие, чтобы основной цикл завершился
-    shutdown_event.set()
+    
+    # Отправляем сообщение об остановке
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(send_shutdown_message())
+    
+    # Останавливаем приложение если оно запущено
+    if application:
+        if application.running:
+            print("⏹️  Останавливаем приложение...")
+            loop.run_until_complete(application.stop())
+    
+    print("👋 Бот завершил работу")
+    sys.exit(0)
 
 def create_application():
     """Создаёт и настраивает приложение бота"""
@@ -74,6 +89,8 @@ def create_application():
 
 async def main_async():
     """Асинхронная основная функция"""
+    global application
+    
     print("🤖 Бот запускается...")
     
     if not TELEGRAM_BOT_TOKEN or "ваш_токен" in TELEGRAM_BOT_TOKEN:
@@ -93,52 +110,41 @@ async def main_async():
         # Устанавливаем флаг работы
         bot_state['is_running'] = True
         
+        # Отправляем сообщение о запуске
+        await send_startup_message()
+        
         # Запускаем бота
         print("✅ Бот инициализирован")
+        print("📡 Запускаем polling... (Ctrl+C для остановки)")
         
-        # Инициализируем и запускаем бота
         await application.initialize()
         await application.start()
+        await application.updater.start_polling()
         
-        # Создаем задачу для polling
-        polling_task = asyncio.create_task(application.updater.start_polling())
+        # Бесконечный цикл ожидания
+        await asyncio.Event().wait()
         
-        # Отправляем сообщение о запуске
-        await send_startup_message(application.bot)
-        
-        print("📡 Бот запущен и работает... (Ctrl+C для остановки)")
-        
-        # Ждем сигнала завершения
-        await shutdown_event.wait()
-        
-        print("\n🔄 Завершаем работу...")
-        
-        # Отправляем сообщение об остановке
-        await send_shutdown_message(application.bot)
-        
-        # Останавливаем бота
-        await application.stop()
-        
-        print("👋 Бот завершил работу")
-        
+    except asyncio.CancelledError:
+        print("\n🔄 Получен запрос на отмену...")
     except KeyboardInterrupt:
         print("\n\n⏹️  Бот остановлен пользователем (Ctrl+C)")
-        # Отправляем сообщение об остановке
-        if 'application' in locals():
-            await send_shutdown_message(application.bot)
-            await application.stop()
     except Exception as e:
         print(f"❌ Ошибка запуска бота: {e}")
         import traceback
         traceback.print_exc()
     finally:
+        # Отправляем сообщение об остановке
+        await send_shutdown_message()
         bot_state['is_running'] = False
+        
+        # Останавливаем приложение
+        if application:
+            await application.stop()
+        
+        print("👋 Бот завершил работу")
 
 def main():
     """Основная функция запуска бота"""
-    # Импортируем signal только в синхронном контексте
-    import signal
-    
     # Регистрируем обработчики сигналов
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)

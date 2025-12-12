@@ -22,21 +22,5 @@ bot_state = {
     'ticker': os.getenv('DEFAULT_TICKER', 'SBER'),
     'depth': int(os.getenv('DEFAULT_DEPTH', 5)),
     'interval': int(os.getenv('DEFAULT_INTERVAL', 10)),
-    'monitoring_job': None,  # Задача мониторинга
-    'is_running': False      # Флаг работы бота
+    'monitoring_job': None  # Задача мониторинга
 }
-
-async def send_notification(bot, message: str):
-    """Отправляет уведомление в чат"""
-    if TELEGRAM_CHAT_ID and TELEGRAM_CHAT_ID != 'ваш_chat_id_сюда':
-        try:
-            await bot.send_message(
-                chat_id=TELEGRAM_CHAT_ID,
-                text=message,
-                parse_mode='HTML'
-            )
-            return True
-        except Exception as e:
-            print(f"❌ Ошибка отправки уведомления: {e}")
-            return False
-    return False
