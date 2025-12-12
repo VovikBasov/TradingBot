@@ -212,9 +212,8 @@
       - orderbook_service.py - Сервис получения стаканов
 
 - scripts/ - Утилиты и скрипты
-   - scanner_gazp.py - Скринер стакана Газпрома через MOEX
    - tinkoff_grpc_client_fixed.py - Быстрый gRPC клиент Tinkoff
-   - tinkoff_scanner.py - Скринер через Tinkoff API (боевой контур)
+   - tinkoff_scanner.py - Скринер через Tinkoff API REST (боевой контур)
 
 - Управление и вспомогательные файлы
    - bot_control.sh - Скрипт управления ботом (старт/стоп/логи)
