@@ -126,9 +126,12 @@ class TinkoffService:
         timestamp = data['timestamp'].strftime('%H:%M:%S')
         message = f"<b>{data['ticker']} | {data['name']} | {timestamp}</b>\n"
         message += "══════════════════════════════\n"
+        
         if data['asks']:
             message += "<b>SELL:</b>\n"
-            for ask in data['asks']:
+            # СОРТИРУЕМ ASKS ОТ БОЛЬШЕЙ ЦЕНЫ К МЕНЬШЕЙ (для продажи сначала самые выгодные цены)
+            sorted_asks = sorted(data['asks'], key=lambda x: x['price'], reverse=True)
+            for ask in sorted_asks[:data['depth']]:
                 message += f"{ask['price']:>8.2f} | {ask['quantity']:>5} лотов\n"
         else:
             message += "<b>SELL:</b> нет данных\n"
@@ -137,7 +140,9 @@ class TinkoffService:
         
         if data['bids']:
             message += "<b>BUY:</b>\n"
-            for bid in data['bids']:
+            # BIDS оставляем от большей цены к меньшей (для покупки сначала самые выгодные цены)
+            sorted_bids = sorted(data['bids'], key=lambda x: x['price'], reverse=True)
+            for bid in sorted_bids[:data['depth']]:
                 message += f"{bid['price']:>8.2f} | {bid['quantity']:>5} лотов\n"
         else:
             message += "<b>BUY:</b> нет данных\n"
