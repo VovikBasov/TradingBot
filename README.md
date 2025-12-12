@@ -55,7 +55,7 @@
 
 8. ПРОВЕРЬТЕ СТРУКТУРУ ПРОЕКТА:
    ```bash  
-   python check_project_structure.py
+   python tests/final_structure_test.py
 
    => Должны увидеть ✅ для всех основных папок и файлов
 
@@ -104,7 +104,7 @@
 - **TELEGRAM CHAT ID**: После настройки бота выполните:
    
    ```bash   
-   python telegram_bot/get_chat_id.py
+   cd telegram_bot && python get_chat_id.py
 
 ### Шаг 3: Запуск бота
 
@@ -140,7 +140,7 @@
 
    # Управление ботом через скрипт
    ./bot_control.sh status  # => статус бота
-   ./bot_control.sh logs    # => просмотр логов
+   tail -f logs/trading_bot.log   # => просмотр логов в реальном времени
    ./bot_control.sh stop    # => остановка бота
 
    ```
@@ -155,7 +155,7 @@
    python moex_direct.py
 
    # 3. Тестируем Tinkoff API
-   python tests/test_tinkoff_simple.py
+   python scripts/tinkoff_grpc_client_fixed.py get DOMRF
 
    # 4. Запускаем бота
    python telegram_bot/bot.py

@@ -3,7 +3,7 @@
 МОНОЛИТНЫЙ ЭКСПОРТ ПРОЕКТА: python_trading
 ================================================================================
 
-📅 Дата экспорта: 2025-12-12 10:25:03
+📅 Дата экспорта: 2025-12-12 11:59:04
 📁 Корневая папка: /Users/vladimirbasov/Desktop/python_trading
 👤 Экспортёр: MonolithicProjectExporter v1.0
 
@@ -108,8 +108,8 @@ Thumbs.db
 
 
 ================================================================================
-ФАЙЛ: PROJECT_FULL_EXPORT_20251212_102503.txt
-ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/PROJECT_FULL_EXPORT_20251212_102503.txt
+ФАЙЛ: PROJECT_FULL_EXPORT_20251212_115904.txt
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/PROJECT_FULL_EXPORT_20251212_115904.txt
 ================================================================================
 
 
@@ -1060,6 +1060,29 @@ yarl==1.22.0
 
 
 ================================================================================
+ФАЙЛ: test_fix.py
+ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/test_fix.py
+================================================================================
+
+import sys
+import asyncio
+from pathlib import Path
+project_root = Path(__file__).parent
+sys.path.insert(0, str(project_root))
+async def test():
+    from telegram_bot.services.tinkoff_service import TinkoffService
+    svc = TinkoffService()
+    print("🧪 Тестируем получение стакана для SBER...")
+    data = await svc.get_orderbook("SBER", 2)
+    if data:
+        print(f"✅ Успех! Получено {len(data['bids'])} бидов и {len(data['asks'])} асков.")
+        print(f"   Лучшая покупка: {data['best_bid']}, Лучшая продажа: {data['best_ask']}")
+    else:
+        print("❌ Не удалось получить данные")
+asyncio.run(test())
+
+
+================================================================================
 ФАЙЛ: project_utils/export_project.py
 ПОЛНЫЙ ПУТЬ: /Users/vladimirbasov/Desktop/python_trading/project_utils/export_project.py
 ================================================================================
@@ -1674,169 +1697,123 @@ if __name__ == "__main__":
 
 #!/usr/bin/env python3
 """
-Tinkoff gRPC клиент для получения стакана - ИСПРАВЛЕННАЯ ВЕРСИЯ 2
+Tinkoff gRPC клиент для получения стакана - ИСПРАВЛЕННАЯ ВЕРСИЯ (синхронизирована с ботом)
 """
 
 import os
 import sys
-import asyncio
 from datetime import datetime
 from dotenv import load_dotenv
 
-# Загружаем переменные окружения
 load_dotenv()
 
-# Добавляем src в путь Python
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from utils.logger import log
 
-# Импортируем proto-модули Tinkoff
 try:
-    from tinkoff.invest import Client, AsyncClient
-    from tinkoff.invest.schemas import InstrumentStatus, InstrumentIdType
+    from tinkoff.invest import Client
     log.info("✅ Tinkoff библиотеки импортированы")
 except ImportError as e:
     log.error(f"❌ Ошибка импорта: {e}")
     sys.exit(1)
 
 class TinkoffGrpcFastClient:
-    """
-    Быстрый gRPC клиент для Tinkoff API
-    Использует асинхронные вызовы и стриминг
-    """
-    
     def __init__(self, token=None):
-        """
-        Инициализация gRPC клиента
-        """
         self.token = token or os.getenv('INVEST_TOKEN')
         if not self.token:
             log.error("❌ Токен не найден. Укажите в .env файле")
             raise ValueError("Токен Tinkoff API не найден")
-        
-        log.info("🚀 Инициализация быстрого gRPC клиента Tinkoff")
-    
+        log.info("🚀 Инициализация gRPC клиента Tinkoff")
+
     def find_instrument_by_ticker_sync(self, ticker: str):
-        """
-        Синхронный поиск инструмента (ИСПРАВЛЕННЫЙ ВАРИАНТ)
-        Ключевое исправление: получаем полный инструмент через get_instrument_by()
-        """
+        """Синхронный поиск инструмента по тикеру"""
         try:
             with Client(self.token) as client:
-                # 1. Сначала находим инструмент через find_instrument
                 found_instruments = client.instruments.find_instrument(query=ticker)
-                
                 if not found_instruments.instruments:
                     log.error(f"❌ Инструмент с тикером '{ticker}' не найден")
                     return None
-                
-                # 2. Ищем точное совпадение по тикеру
-                target_instrument = None
+
+                # Берем первый инструмент с точным совпадением тикера
                 for instrument in found_instruments.instruments:
                     if instrument.ticker == ticker:
-                        target_instrument = instrument
-                        log.info(f"🔍 Найден тикер '{ticker}', получаем полные данные...")
-                        break
-                
-                if not target_instrument:
-                    log.error(f"❌ Точное совпадение для тикера '{ticker}' не найдено")
-                    return None
-                
-                # 3. Получаем ПОЛНЫЙ инструмент через get_instrument_by
-                # Используем FIGI, если есть, иначе uid
-                if hasattr(target_instrument, 'figi') and target_instrument.figi:
-                    full_instrument = client.instruments.get_instrument_by(
-                        id_type=InstrumentIdType.INSTRUMENT_ID_TYPE_FIGI,
-                        id=target_instrument.figi
-                    )
-                elif hasattr(target_instrument, 'uid') and target_instrument.uid:
-                    full_instrument = client.instruments.get_instrument_by(
-                        id_type=InstrumentIdType.INSTRUMENT_ID_TYPE_UID,
-                        id=target_instrument.uid
-                    )
-                else:
-                    log.error(f"❌ Не удалось определить ID для инструмента '{ticker}'")
-                    return None
-                
-                # 4. Проверяем, что инструмент активен
-                if full_instrument.instrument.state == InstrumentStatus.INSTRUMENT_STATUS_BASE:
-                    log.info(f"✅ Найден активный инструмент: {full_instrument.instrument.name} ({full_instrument.instrument.ticker})")
-                    return full_instrument.instrument
-                else:
-                    log.warning(f"⚠️  Инструмент найден, но неактивен: {full_instrument.instrument.name}, статус: {full_instrument.instrument.state}")
-                    return full_instrument.instrument
-                
+                        if getattr(instrument, 'api_trade_available_flag', False):
+                            log.info(f"✅ Найден подходящий инструмент: {instrument.name} ({instrument.ticker}), FIGI: {instrument.figi}")
+                        else:
+                            log.info(f"⚠️  Инструмент '{ticker}' найден, но недоступен для торговли через API.")
+                        return instrument
+
+                log.error(f"❌ Точное совпадение для тикера '{ticker}' не найдено")
+                return None
+
         except Exception as e:
             log.error(f"❌ Ошибка поиска инструмента '{ticker}': {e}")
             import traceback
             log.error(f"Подробности: {traceback.format_exc()}")
             return None
-    
+
     def get_orderbook_snapshot_sync(self, ticker: str, depth: int = 5):
-        """
-        Синхронный запрос стакана (основной рабочий метод)
-        """
         log.info(f"📊 Запрашиваем стакан для '{ticker}'...")
         instrument = self.find_instrument_by_ticker_sync(ticker)
-        
+
         if not instrument:
             log.error(f"❌ Не удалось найти инструмент '{ticker}' для стакана")
             return None
-        
+
         try:
             start_time = datetime.now()
-            
+
             with Client(self.token) as client:
-                # Получаем стакан
-                orderbook = client.market_data.get_order_book(
-                    figi=instrument.figi,
-                    depth=depth
-                )
-            
+                # Получаем ответ API (может быть GetOrderBookResponse или OrderBook)
+                response = client.market_data.get_order_book(figi=instrument.figi, depth=depth)
+
             response_time = (datetime.now() - start_time).total_seconds() * 1000
-            
+
             result = {
                 'ticker': ticker,
                 'instrument': instrument,
-                'orderbook': orderbook,
+                'response': response,  # Сохраняем весь ответ
                 'timestamp': datetime.now(),
                 'response_time_ms': response_time,
                 'source': 'gRPC (sync)'
             }
-            
+
             log.info(f"✅ Стакан '{ticker}' получен за {response_time:.1f} мс")
             return result
-            
+
         except Exception as e:
             log.error(f"❌ Ошибка получения стакана '{ticker}': {e}")
             return None
-    
+
     def _quotation_to_float(self, quotation):
         """Конвертирует Quotation в float"""
         if hasattr(quotation, 'units') and hasattr(quotation, 'nano'):
             return quotation.units + quotation.nano / 1e9
         return float(quotation) if quotation else 0.0
-    
+
     def print_pretty_orderbook(self, data):
         """
-        Красиво печатает стакан
+        Красиво печатает стакан (без лучших цен и спреда)
         """
         if not data:
             print(f"❌ Нет данных стакана")
             return
-        
-        orderbook = data['orderbook']
+
+        response = data['response']
         instrument = data['instrument']
-        
+
+        # Извлекаем объект стакана из ответа (как в боте)
+        orderbook = response.orderbook if hasattr(response, 'orderbook') else response
+
         print(f"\n{'='*60}")
         print(f"📊 СТАКАН {data['ticker']} ({instrument.name})")
         print(f"⏰ {data['timestamp'].strftime('%H:%M:%S')} | 📡 {data['source']}")
         print(f"⚡ Время ответа: {data.get('response_time_ms', 0):.1f} мс")
         print(f"{'='*60}")
-        
+
         # Аски (продажа) - сверху
-        if orderbook.asks:
+        if hasattr(orderbook, 'asks') and orderbook.asks:
             print("💰 ПРОДАЖА (asks):")
             for ask in orderbook.asks[:5]:
                 price = self._quotation_to_float(ask.price)
@@ -1844,11 +1821,11 @@ class TinkoffGrpcFastClient:
                 print(f"  {price:10.2f} | {quantity:6} лотов")
         else:
             print("💰 ПРОДАЖА: пусто")
-        
+
         print(f"{'-'*30}")
-        
+
         # Биды (покупка) - снизу
-        if orderbook.bids:
+        if hasattr(orderbook, 'bids') and orderbook.bids:
             print("🛒 ПОКУПКА (bids):")
             for bid in orderbook.bids[:5]:
                 price = self._quotation_to_float(bid.price)
@@ -1856,16 +1833,9 @@ class TinkoffGrpcFastClient:
                 print(f"  {price:10.2f} | {quantity:6} лотов")
         else:
             print("🛒 ПОКУПКА: пусто")
-        
+
         print(f"{'='*60}")
-        
-        # Лучшие цены
-        if orderbook.best_bid_price and orderbook.best_ask_price:
-            spread = self._quotation_to_float(orderbook.best_ask_price) - self._quotation_to_float(orderbook.best_bid_price)
-            spread_percent = (spread / self._quotation_to_float(orderbook.best_bid_price)) * 100
-            print(f"💎 Лучший спрос:   {self._quotation_to_float(orderbook.best_bid_price):.2f}")
-            print(f"💎 Лучшее предложение: {self._quotation_to_float(orderbook.best_ask_price):.2f}")
-            print(f"📏 Спред: {spread:.2f} ({spread_percent:.2f}%)")
+        # Убрали блок с лучшими ценами и спредом
         print(f"{'='*60}")
 
 # СИНХРОННЫЕ ФУНКЦИИ ДЛЯ КОМАНДНОЙ СТРОКИ
@@ -1891,55 +1861,14 @@ def test_connection_sync(ticker="SBER"):
             print(f"   Название: {instrument.name}")
             print(f"   Тикер: {instrument.ticker}")
             print(f"   FIGI: {instrument.figi}")
-            print(f"   Статус: {instrument.state}")
-            print(f"   Лот: {instrument.lot}")
+            if hasattr(instrument, 'lot'):
+                print(f"   Лот: {instrument.lot}")
             return True
         else:
             print(f"❌ Инструмент '{ticker}' не найден")
             return False
     except Exception as e:
         print(f"❌ Ошибка: {e}")
-        return False
-
-def simple_test():
-    """Простой тест напрямую через API"""
-    print("🧪 Простой тест API...")
-    try:
-        from tinkoff.invest import Client
-        from tinkoff.invest.schemas import InstrumentIdType
-        from dotenv import load_dotenv
-        import os
-        
-        load_dotenv()
-        token = os.getenv('INVEST_TOKEN')
-        
-        with Client(token) as client:
-            # Ищем SBER
-            instruments = client.instruments.find_instrument(query="SBER")
-            print(f"🔍 Найдено инструментов: {len(instruments.instruments)}")
-            
-            for i, instr in enumerate(instruments.instruments[:3]):
-                print(f"\nИнструмент {i+1}:")
-                print(f"  Тип: {type(instr)}")
-                print(f"  Тикер: {instr.ticker}")
-                print(f"  Название: {instr.name}")
-                print(f"  Атрибуты: {[attr for attr in dir(instr) if not attr.startswith('_')]}")
-                
-                # Пробуем получить полный инструмент если есть FIGI
-                if hasattr(instr, 'figi') and instr.figi:
-                    try:
-                        full = client.instruments.get_instrument_by(
-                            id_type=InstrumentIdType.INSTRUMENT_ID_TYPE_FIGI,
-                            id=instr.figi
-                        )
-                        print(f"  ✅ Полный инструмент получен!")
-                        print(f"     Статус: {full.instrument.state}")
-                    except Exception as e:
-                        print(f"  ❌ Ошибка получения полного инструмента: {e}")
-        
-        return True
-    except Exception as e:
-        print(f"❌ Ошибка простого теста: {e}")
         return False
 
 # ТОЧКА ВХОДА
@@ -1949,36 +1878,31 @@ def main():
     """Основная функция"""
     if len(sys.argv) < 2:
         print("""
-📡 Tinkoff gRPC Client v2 - Быстрое получение стакана
+📡 Tinkoff gRPC Client - Быстрое получение стакана
 Использование:
   python scripts/tinkoff_grpc_client_fixed.py <команда> [тикер] [глубина]
 
 Команды:
   test [тикер]       - Тест подключения и поиска инструмента
   get [тикер] [глуб] - Получить стакан (глубина по умолчанию: 5)
-  simple             - Простой тест API напрямую
-  
+
 Примеры:
   python scripts/tinkoff_grpc_client_fixed.py test SBER
-  python scripts/tinkoff_grpc_client_fixed.py get GAZP 10
-  python scripts/tinkoff_grpc_client_fixed.py simple
+  python scripts/tinkoff_grpc_client_fixed.py get DOMRF 10
         """)
         return
-    
+
     command = sys.argv[1].lower()
-    
+
     if command == "test":
         ticker = sys.argv[2] if len(sys.argv) > 2 else "SBER"
         test_connection_sync(ticker)
-    
+
     elif command == "get":
         ticker = sys.argv[2] if len(sys.argv) > 2 else "SBER"
         depth = int(sys.argv[3]) if len(sys.argv) > 3 else 5
         get_orderbook_sync(ticker, depth)
-    
-    elif command == "simple":
-        simple_test()
-    
+
     else:
         print(f"❌ Неизвестная команда: {command}")
 
@@ -2914,7 +2838,7 @@ async def status(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 #!/usr/bin/env python3
 """
-Обработчики команд для работы со стаканом
+Обработчики команд для работы со стаканом (упрощенная версия)
 """
 
 import asyncio
@@ -2926,80 +2850,52 @@ from telegram_bot.services.orderbook_service import get_orderbook as get_orderbo
 async def get_orderbook(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработчик команды /orderbook"""
     try:
-        # Получаем настройки из состояния
         ticker = bot_state.get('ticker', 'SBER')
         depth = bot_state.get('depth', 5)
-        
-        # Отправляем сообщение о начале получения
         await update.message.reply_text(f"🔍 Получаю стакан {ticker}...")
-        
-        # Получаем данные стакана
         orderbook_data = await get_orderbook_data(ticker, depth)
-        
         if not orderbook_data:
-            await update.message.reply_text(f"❌ Не удалось получить стакан для {ticker}. Проверьте тикер или попробуйте позже.")
+            await update.message.reply_text(f"❌ Не удалось получить стакан для {ticker}.")
             return
-        
-        # Форматируем и отправляем
         message = await format_orderbook_message(orderbook_data)
         await update.message.reply_text(message, parse_mode='HTML')
-        
     except Exception as e:
         await update.message.reply_text(f"❌ Ошибка: {str(e)[:100]}")
 
 async def send_orderbook_job(context: ContextTypes.DEFAULT_TYPE):
     """Задача для периодической отправки стакана"""
     try:
-        # Получаем настройки из состояния
         ticker = bot_state.get('ticker', 'SBER')
         depth = bot_state.get('depth', 5)
-        
-        # Получаем данные стакана
         orderbook_data = await get_orderbook_data(ticker, depth)
-        
         if not orderbook_data:
             print(f"❌ Не удалось получить стакан для {ticker} в задаче мониторинга")
             return
-        
-        # Форматируем сообщение
         message = await format_orderbook_message(orderbook_data)
-        
-        # Отправляем сообщение
         await context.bot.send_message(
             chat_id=context.job.chat_id,
             text=message,
             parse_mode='HTML'
         )
-        
     except Exception as e:
         print(f"❌ Ошибка в задаче мониторинга: {e}")
 
 async def start_monitoring(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Обработчик команды /start_monitoring"""
     try:
-        # Проверяем, не запущен ли уже мониторинг
         if bot_state.get('monitoring_job'):
             await update.message.reply_text("⚠️ Мониторинг уже запущен!")
             return
-        
-        # Получаем настройки
         ticker = bot_state.get('ticker', 'SBER')
         depth = bot_state.get('depth', 5)
         interval = bot_state.get('interval', 10)
-        
-        # Проверяем интервал
         if interval < 1:
             await update.message.reply_text("❌ Интервал должен быть не менее 1 секунды")
             return
-        
-        # Создаем задачу для периодической отправки
         job_queue = context.job_queue
-        
         if job_queue is None:
             await update.message.reply_text("❌ Ошибка: JobQueue не инициализирован")
             return
-        
-        # Запускаем задачу
         job = job_queue.run_repeating(
             send_orderbook_job,
             interval=interval,
@@ -3007,10 +2903,7 @@ async def start_monitoring(update: Update, context: ContextTypes.DEFAULT_TYPE):
             chat_id=update.effective_chat.id,
             name=f"orderbook_monitoring_{ticker}"
         )
-        
-        # Сохраняем задачу в состоянии
         bot_state['monitoring_job'] = job
-        
         await update.message.reply_text(
             f"✅ Мониторинг запущен!\n\n"
             f"📊 <b>Тикер:</b> {ticker}\n"
@@ -3019,7 +2912,6 @@ async def start_monitoring(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"Для остановки: /stop_monitoring",
             parse_mode='HTML'
         )
-        
     except Exception as e:
         await update.message.reply_text(f"❌ Ошибка запуска мониторинга: {str(e)[:100]}")
 
@@ -3204,239 +3096,142 @@ async def format_orderbook_message(data: Dict[str, Any]) -> str:
 
 #!/usr/bin/env python3
 """
-Сервис для работы с Tinkoff API (асинхронный)
-Использует gRPC для получения стаканов
+Сервис для работы с Tinkoff API (ТОЛЬКО СТАКАН, упрощенная версия)
 """
 
 import os
 import asyncio
 from datetime import datetime
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Tuple
 from pathlib import Path
 import sys
 
-# Добавляем корень проекта в путь Python
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
 from dotenv import load_dotenv
-
 load_dotenv()
 
 try:
-    from tinkoff.invest import AsyncClient
-    from tinkoff.invest.schemas import InstrumentStatus, InstrumentIdType
+    from tinkoff.invest import Client
     print("✅ Tinkoff библиотеки импортированы")
 except ImportError as e:
     print(f"❌ Ошибка импорта Tinkoff: {e}")
     raise
 
 class TinkoffService:
-    """Сервис для работы с Tinkoff Invest API"""
-    
     def __init__(self):
         self.token = os.getenv('INVEST_TOKEN')
         if not self.token:
             raise ValueError("❌ Токен Tinkoff API не найден в .env файле")
-        
-        self._client = None
-        print("🚀 TinkoffService инициализирован")
-    
-    async def __aenter__(self):
-        """Контекстный менеджер"""
-        self._client = AsyncClient(self.token)
-        await self._client.__aenter__()
-        return self
-    
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        """Завершение работы"""
-        if self._client:
-            await self._client.__aexit__(exc_type, exc_val, exc_tb)
-    
+        print("🚀 TinkoffService инициализирован (версия: ТОЛЬКО СТАКАН)")
+
     async def find_instrument_by_ticker(self, ticker: str):
-        """Находит инструмент по тикеру"""
+        return await asyncio.to_thread(self._find_instrument_by_ticker_sync, ticker)
+
+    def _find_instrument_by_ticker_sync(self, ticker: str):
         try:
-            # Сначала получаем все акции
-            shares_response = await self._client.instruments.shares()
-            
-            # Ищем по точному тикеру
-            for instrument in shares_response.instruments:
-                if (instrument.ticker == ticker and 
-                    instrument.exchange == 'MOEX' and
-                    instrument.class_code == 'TQBR'):
-                    print(f"✅ Найдена акция: {instrument.name} ({instrument.ticker})")
-                    return instrument
-            
-            print(f"❌ Акция с тикером '{ticker}' не найдена на MOEX")
-            return None
-            
+            with Client(self.token) as client:
+                found_instruments = client.instruments.find_instrument(query=ticker)
+                if not found_instruments.instruments:
+                    print(f"❌ Инструмент с тикером '{ticker}' не найден")
+                    return None
+                for instrument in found_instruments.instruments:
+                    if instrument.ticker == ticker:
+                        print(f"✅ Найден инструмент: {instrument.name} ({instrument.ticker})")
+                        return instrument
+                print(f"❌ Точное совпадение для тикера '{ticker}' не найдено")
+                return None
         except Exception as e:
             print(f"❌ Ошибка поиска инструмента '{ticker}': {e}")
+            import traceback
+            print(f"Подробности: {traceback.format_exc()}")
             return None
-    
+
     async def get_orderbook(self, ticker: str, depth: int = 5) -> Optional[Dict[str, Any]]:
-        """
-        Получает стакан по тикеру
-        
-        Returns:
-            Словарь с данными стакана или None при ошибке
-        """
+        return await asyncio.to_thread(self._get_orderbook_sync, ticker, depth)
+
+    def _get_orderbook_sync(self, ticker: str, depth: int = 5) -> Optional[Dict[str, Any]]:
+        """Синхронное получение стакана (ТОЛЬКО bids и asks)"""
         try:
-            instrument = await self.find_instrument_by_ticker(ticker)
+            instrument = self._find_instrument_by_ticker_sync(ticker)
             if not instrument:
                 return None
-            
-            # Получаем стакан
-            orderbook = await self._client.market_data.get_order_book(
-                figi=instrument.figi,
-                depth=depth
-            )
-            
-            # Форматируем результат
+            print(f"📊 Запрашиваем стакан для '{ticker}' (глубина: {depth})...")
+            with Client(self.token) as client:
+                api_response = client.market_data.get_order_book(figi=instrument.figi, depth=depth)
+            orderbook_obj = api_response.orderbook if hasattr(api_response, 'orderbook') else api_response
+            print(f"   Ответ типа: {type(orderbook_obj).__name__}")
             result = {
                 'ticker': ticker,
                 'name': instrument.name,
                 'asks': [],
                 'bids': [],
-                'best_bid': None,
-                'best_ask': None,
-                'timestamp': datetime.now()
+                'timestamp': datetime.now(),
+                'depth': depth
             }
-            
-            # Обрабатываем аски (продажа)
-            if orderbook.asks:
-                result['best_ask'] = self._quotation_to_float(orderbook.best_ask_price)
-                for ask in orderbook.asks[:depth]:
-                    price = self._quotation_to_float(ask.price)
-                    quantity = ask.quantity
+            if hasattr(orderbook_obj, 'asks') and orderbook_obj.asks:
+                for ask in orderbook_obj.asks[:depth]:
                     result['asks'].append({
-                        'price': price,
-                        'quantity': quantity
+                        'price': self._quotation_to_float(ask.price),
+                        'quantity': ask.quantity
                     })
-            
-            # Обрабатываем биды (покупка)
-            if orderbook.bids:
-                result['best_bid'] = self._quotation_to_float(orderbook.best_bid_price)
-                for bid in orderbook.bids[:depth]:
-                    price = self._quotation_to_float(bid.price)
-                    quantity = bid.quantity
+            if hasattr(orderbook_obj, 'bids') and orderbook_obj.bids:
+                for bid in orderbook_obj.bids[:depth]:
                     result['bids'].append({
-                        'price': price,
-                        'quantity': quantity
+                        'price': self._quotation_to_float(bid.price),
+                        'quantity': bid.quantity
                     })
-            
+            print(f"✅ Данные стакана '{ticker}' получены")
             return result
-            
         except Exception as e:
             print(f"❌ Ошибка получения стакана '{ticker}': {e}")
+            import traceback
+            traceback.print_exc()
             return None
-    
+
     def _quotation_to_float(self, quotation) -> float:
-        """Конвертирует Quotation в float"""
         if hasattr(quotation, 'units') and hasattr(quotation, 'nano'):
             return quotation.units + quotation.nano / 1e9
         return float(quotation) if quotation else 0.0
-    
+
     def format_orderbook_for_telegram(self, data: Dict[str, Any]) -> str:
-        """Форматирует стакан для отправки в Telegram"""
-        if not data:
-            return "❌ Не удалось получить данные стакана"
-        
-        # Создаём заголовок
+        """Форматирует ТОЛЬКО стакан для Telegram (без лучших цен и спреда)"""
+        if not data or (not data['asks'] and not data['bids']):
+            return f"❌ Не удалось получить стакан для {data.get('ticker', 'тикера')} или стакан пуст."
         timestamp = data['timestamp'].strftime('%H:%M:%S')
-        message = f"📊 <b>СТАКАН {data['ticker']}</b>\n"
-        message += f"<i>{data['name']}</i>\n\n"
-        
-        # Продажа (asks)
+        message = f"<b>{data['ticker']} | {data['name']} | {timestamp}</b>\n"
+        message += "══════════════════════════════\n"
         if data['asks']:
-            message += "💰 <b>ПРОДАЖА:</b>\n"
-            for ask in data['asks'][:5]:  # Только первые 5 уровней
-                message += f"  {ask['price']:>8.2f} | {ask['quantity']:>6} лотов\n"
+            message += "<b>SELL:</b>\n"
+            for ask in data['asks']:
+                message += f"{ask['price']:>8.2f} | {ask['quantity']:>5} лотов\n"
         else:
-            message += "💰 <b>ПРОДАЖА:</b> нет данных\n"
-        
+            message += "<b>SELL:</b> нет данных\n"
         message += "\n"
-        
-        # Покупка (bids)
         if data['bids']:
-            message += "🛒 <b>ПОКУПКА:</b>\n"
-            for bid in data['bids'][:5]:
-                message += f"  {bid['price']:>8.2f} | {bid['quantity']:>6} лотов\n"
+            message += "<b>BUY:</b>\n"
+            for bid in data['bids']:
+                message += f"{bid['price']:>8.2f} | {bid['quantity']:>5} лотов\n"
         else:
-            message += "🛒 <b>ПОКУПКА:</b> нет данных\n"
-        
-        message += "\n"
-        
-        # Спред и время
-        if data['best_bid'] and data['best_ask']:
-            spread = data['best_ask'] - data['best_bid']
-            spread_percent = (spread / data['best_bid']) * 100
-            message += f"💎 <b>Спрос:</b> {data['best_bid']:.2f}\n"
-            message += f"💎 <b>Предложение:</b> {data['best_ask']:.2f}\n"
-            message += f"📏 <b>Спред:</b> {spread:.2f} ({spread_percent:.2f}%)\n"
-        
-        message += f"⏰ <i>{timestamp}</i>"
-        
+            message += "<b>BUY:</b> нет данных\n"
         return message
 
-# Глобальный экземпляр сервиса (для удобства)
+# Глобальный экземпляр сервиса
 _tinkoff_service = None
-
 async def get_tinkoff_service():
-    """Получает или создаёт экземпляр TinkoffService"""
     global _tinkoff_service
     if _tinkoff_service is None:
         _tinkoff_service = TinkoffService()
-        await _tinkoff_service.__aenter__()
     return _tinkoff_service
-
 async def close_tinkoff_service():
-    """Закрывает соединение с Tinkoff"""
     global _tinkoff_service
-    if _tinkoff_service:
-        await _tinkoff_service.__aexit__(None, None, None)
-        _tinkoff_service = None
+    _tinkoff_service = None
 def format_orderbook_for_telegram(data: Dict[str, Any]) -> str:
-    """Статическая функция для форматирования стакана"""
     if not data:
-        return "❌ Не удалось получить данные стакана"
-    
-    # Создаём заголовок
-    timestamp = data['timestamp'].strftime('%H:%M:%S')
-    message = f"📊 <b>СТАКАН {data['ticker']}</b>\n"
-    message += f"<i>{data['name']}</i>\n\n"
-    
-    # Продажа (asks)
-    if data['asks']:
-        message += "💰 <b>ПРОДАЖА:</b>\n"
-        for ask in data['asks'][:5]:  # Только первые 5 уровней
-            message += f"  {ask['price']:>8.2f} | {ask['quantity']:>6} лотов\n"
-    else:
-        message += "💰 <b>ПРОДАЖА:</b> нет данных\n"
-    
-    message += "\n"
-    
-    # Покупка (bids)
-    if data['bids']:
-        message += "🛒 <b>ПОКУПКА:</b>\n"
-        for bid in data['bids'][:5]:
-            message += f"  {bid['price']:>8.2f} | {bid['quantity']:>6} лотов\n"
-    else:
-        message += "🛒 <b>ПОКУПКА:</b> нет данных\n"
-    
-    message += "\n"
-    
-    # Спред и время
-    if data['best_bid'] and data['best_ask']:
-        spread = data['best_ask'] - data['best_bid']
-        spread_percent = (spread / data['best_bid']) * 100
-        message += f"💎 <b>Спрос:</b> {data['best_bid']:.2f}\n"
-        message += f"💎 <b>Предложение:</b> {data['best_ask']:.2f}\n"
-        message += f"📏 <b>Спред:</b> {spread:.2f} ({spread_percent:.2f}%)\n"
-    
-    message += f"⏰ <i>{timestamp}</i>"
-    
-    return message
+        return "❌ Не удалось получить данные стакана."
+    service = TinkoffService()
+    return service.format_orderbook_for_telegram(data)
 
 
 ================================================================================
@@ -3625,7 +3420,7 @@ import sys
 from pathlib import Path
 
 # Добавляем корень проекта в путь Python
-project_root = Path(__file__).parent
+project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 print("🔍 Проверяем исправленные импорты...")
@@ -3946,9 +3741,9 @@ print(f"📁 Путь: {os.getcwd()}")
 ================================================================================
 📊 СТАТИСТИКА ЭКСПОРТА
 ================================================================================
-Всего файлов: 57
-Общий размер кода: 111719 байт (109.1 КБ)
-Дата экспорта: 2025-12-12 10:25:03
+Всего файлов: 58
+Общий размер кода: 104844 байт (102.4 КБ)
+Дата экспорта: 2025-12-12 11:59:04
 ================================================================================
 
 🎯 ИНСТРУКЦИЯ ДЛЯ АНАЛИЗА:
