@@ -42,54 +42,6 @@ class BotManager:
         """Обновляет время последнего сообщения"""
         self.last_message_time[chat_id] = datetime.now()
     
-    def _send_shutdown_notification(self):
-        """Внутренний метод для отправки сообщения об остановке через Telegram API"""
-        try:
-            from telegram import Bot
-            from dotenv import load_dotenv
-            import os
-            import asyncio
-
-            load_dotenv()
-            token = os.getenv('TELEGRAM_BOT_TOKEN')
-            chat_id = os.getenv('TELEGRAM_CHAT_ID')
-
-            if not token or "ваш_токен" in token:
-                print("   ⚠️ Токен бота не настроен, пропускаем уведомление")
-                return False
-            if not chat_id or "ваш_chat_id" in chat_id:
-                print("   ⚠️ Chat ID не настроен, пропускаем уведомление")
-                return False
-
-            async def async_send():
-                bot = Bot(token=token)
-                try:
-                    await bot.send_message(
-                        chat_id=chat_id,
-                        text="😴 <b>Бот ушёл спать</b>\n\nДля возобновления работы перезапустите бота",
-                        parse_mode='HTML'
-                    )
-                    return True
-                except Exception as e:
-                    print(f"   ❌ Ошибка отправки уведомления: {e}")
-                    return False
-                finally:
-                    await bot.close()
-
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            success = loop.run_until_complete(async_send())
-            loop.close()
-
-            return success
-
-        except ImportError:
-            print("   ⚠️ Библиотека python-telegram-bot не установлена")
-            return False
-        except Exception as e:
-            print(f"   ⚠️ Неожиданная ошибка при отправке уведомления: {e}")
-            return False
-    
     def start_bot(self):
         """Запускает бота"""
         print("🚀 Запускаем бота...")
@@ -114,36 +66,33 @@ class BotManager:
             return False
     
     def stop_bot(self):
-        """Останавливает бота с отправкой уведомления"""
-        print("⏹️ Останавливаем бота...")
-
+        """Останавливает бота"""
+        print("⏹️  Останавливаем бота...")
+        
         if not self.is_bot_running():
             print("✅ Бот не запущен")
             return True
-
-        # 1. Попытка отправить уведомление об остановке через API
-        print("📤 Пытаемся отправить уведомление в Telegram...")
-        notification_sent = self._send_shutdown_notification()
-
-        # 2. Мягкая остановка процессов
+        
         pids = self.get_bot_pids()
         print(f"📊 Найдено процессов: {len(pids)}")
+        
+        # Мягкая остановка через bot_control.sh
         os.system("./bot_control.sh stop")
-
-        # 3. Ждем завершения и проверяем
+        
+        # Ждем завершения
         time.sleep(5)
+        
+        # Проверяем, остались ли процессы
         remaining_pids = self.get_bot_pids()
-
+        
         if remaining_pids:
-            print(f"⚠️ {len(remaining_pids)} процессов не завершились, принудительно останавливаем...")
+            print(f"⚠️  {len(remaining_pids)} процессов не завершились, принудительно останавливаем...")
             for pid in remaining_pids:
                 os.system(f"kill -9 {pid} 2>/dev/null")
             time.sleep(1)
-
+        
         if not self.is_bot_running():
             print("✅ Бот успешно остановлен")
-            if notification_sent:
-                print("   (Уведомление в Telegram отправлено)")
             return True
         else:
             print("❌ Не удалось полностью остановить бот")
