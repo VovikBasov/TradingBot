@@ -6,19 +6,18 @@
 import sys
 import os
 from pathlib import Path
-
-# Добавляем корень проекта в путь Python
-project_root = Path(__file__).parent
-sys.path.insert(0, str(project_root))
-
-from telegram_bot.services.tinkoff_service import TinkoffService
 import asyncio
+
+# Обновляем путь для импорта после перемещения в tests/
+project_root = Path(__file__).parent.parent  # Поднимаемся на 2 уровня выше
+sys.path.insert(0, str(project_root))
 
 async def test_monitoring():
     """Тестируем получение стакана"""
     print("🧪 Тестируем получение стакана для мониторинга...")
     
     try:
+        from telegram_bot.services.tinkoff_service import TinkoffService
         service = TinkoffService()
         
         # Тестируем получение стакана

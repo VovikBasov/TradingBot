@@ -1,5 +1,15 @@
+#!/usr/bin/env python3
+"""
+Отладка импортов и путей Python
+"""
+
 import sys
 import os
+from pathlib import Path
+
+# Обновляем путь для импорта после перемещения в scripts/
+project_root = Path(__file__).parent.parent  # Поднимаемся на 2 уровня выше
+sys.path.insert(0, str(project_root))
 
 print("🔧 Debug путей Python:")
 print(f"Текущая папка: {os.getcwd()}")

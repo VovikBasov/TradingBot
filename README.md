@@ -71,7 +71,7 @@
 
 7. ПРОВЕРЬТЕ УСТАНОВКУ:
    ```bash  
-   python check_install.py
+   python scripts/check_install.py
 
    => Должны увидеть все галочки ✅ и версии библиотек
 
@@ -126,7 +126,7 @@
 - **TELEGRAM CHAT ID**: После настройки бота выполните:
    
    ```bash   
-   cd telegram_bot && python get_chat_id.py
+   cd telegram_bot cd telegram_bot && python get_chat_id.pycd telegram_bot && python get_chat_id.py python get_chat_id.py
 
 ### Шаг 3: Запуск бота
 
