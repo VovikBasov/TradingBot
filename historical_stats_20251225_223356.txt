@@ -1,9 +1,0 @@
-СТАТИСТИКА ИСТОРИЧЕСКИХ ДАННЫХ
-==================================================
-timestamp           : 20251225_223356
-total_instruments   : 28
-trading_days        : 292
-start_date          : 2024-12-25
-end_date            : 2025-12-25
-price_matrix_file   : historical_prices_20251225_223356.csv
-metadata_file       : historical_metadata_20251225_223356.csv
