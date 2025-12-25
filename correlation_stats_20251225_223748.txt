@@ -1,0 +1,11 @@
+СТАТИСТИКА КОРРЕЛЯЦИОННОГО АНАЛИЗА
+==================================================
+timestamp                     : 20251225_223748
+total_instruments             : 28
+trading_days                  : 292
+strong_pairs_found            : 20
+min_correlation_threshold     : 0.7
+min_common_days               : 100
+pairs_file                    : correlation_pairs_20251225_223748.csv
+correlation_matrix_file       : correlation_matrix_20251225_223748.csv
+recommendations_file          : trading_recommendations_20251225_223748.txt
