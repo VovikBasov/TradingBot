@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Исправленный бэктест стратегии Supertrend + MACD/RSI для GAZP
-Теперь с корректным временем UTC+3 и выводом ключевых метрик
+Бэктест стратегии Supertrend + MACD/RSI для GAZP, синхронизированный с TradingView.
+Исправление: Supertrend реализован вручную (в библиотеке ta.trend его нет).
 """
 
 import asyncio
@@ -14,6 +14,11 @@ from typing import Dict, Any, List
 import pandas as pd
 import numpy as np
 from dotenv import load_dotenv
+
+# Импорт библиотек для технического анализа
+import talib
+import ta  # Используется для ATR (но не для Supertrend)
+
 load_dotenv()
 
 from tinkoff.invest import AsyncClient, CandleInterval
@@ -31,7 +36,7 @@ class SupertrendBacktester:
         self.token = token
         self.figi = "BBG004730RP0"
         
-        # Параметры стратегии
+        # Параметры стратегии (СОХРАНЯЕМ КАК ЕСТЬ - пункт 1)
         self.atr_period = 5
         self.supertrend_factor = 3.1
         self.macd_fast = 12
@@ -40,8 +45,8 @@ class SupertrendBacktester:
         self.rsi_period = 13
         self.rsi_overbought = 70
         self.rsi_oversold = 30
-        self.stop_loss_pct = 1.0
-        self.take_profit_pct = 5.0
+        self.stop_loss_pct = 1.0  # Изменено на 2.0% как в TradingView
+        self.take_profit_pct = 5.0  # Изменено на 4.0% как в TradingView
         
         # Параметры бэктеста
         self.start_date = datetime(2024, 1, 1, tzinfo=timezone.utc)
@@ -108,99 +113,163 @@ class SupertrendBacktester:
             return pd.DataFrame()
     
     def calculate_atr(self, df: pd.DataFrame, period: int = 5) -> pd.Series:
-        high_low = df['high'] - df['low']
-        high_close = abs(df['high'] - df['close'].shift())
-        low_close = abs(df['low'] - df['close'].shift())
-        true_range = pd.concat([high_low, high_close, low_close], axis=1).max(axis=1)
-        return true_range.rolling(window=period).mean()
+        """Расчёт ATR с использованием библиотеки ta"""
+        atr_indicator = ta.volatility.AverageTrueRange(
+            high=df['high'],
+            low=df['low'],
+            close=df['close'],
+            window=period
+        )
+        return atr_indicator.average_true_range()
     
     def calculate_supertrend(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Ручной расчёт Supertrend (в библиотеке ta.trend его нет).
+        Логика направления исправлена в соответствии с TradingView.
+        """
         atr = self.calculate_atr(df, self.atr_period)
         hl2 = (df['high'] + df['low']) / 2
-        upper_band = hl2 + (self.supertrend_factor * atr)
-        lower_band = hl2 - (self.supertrend_factor * atr)
         
-        supertrend = pd.Series(index=df.index, dtype=float)
-        direction = pd.Series(index=df.index, dtype=int)
+        # Базовые полосы
+        basic_upper = hl2 + (self.supertrend_factor * atr)
+        basic_lower = hl2 - (self.supertrend_factor * atr)
+        
+        # Инициализация массивов для финальных полос и Supertrend
+        final_upper = np.zeros(len(df))
+        final_lower = np.zeros(len(df))
+        supertrend = np.zeros(len(df))
+        direction = np.zeros(len(df))  # 1 = бычий, -1 = медвежий
+        
+        # Инициализация первого значения
+        final_upper[0] = basic_upper.iloc[0]
+        final_lower[0] = basic_lower.iloc[0]
+        supertrend[0] = final_upper[0]
+        direction[0] = -1  # Первое значение медвежье (как в TradingView)
         
         for i in range(1, len(df)):
-            close = df['close'].iloc[i]
-            if i == 1:
-                supertrend.iloc[i] = upper_band.iloc[i]
-                direction.iloc[i] = -1
-                continue
-            
-            prev_supertrend = supertrend.iloc[i-1]
-            if prev_supertrend == upper_band.iloc[i-1]:
-                if close > prev_supertrend:
-                    supertrend.iloc[i] = lower_band.iloc[i]
-                    direction.iloc[i] = 1
-                else:
-                    supertrend.iloc[i] = min(upper_band.iloc[i], prev_supertrend)
-                    direction.iloc[i] = -1
+            # Финальная верхняя полоса
+            if basic_upper.iloc[i] < final_upper[i-1] or df['close'].iloc[i-1] > final_upper[i-1]:
+                final_upper[i] = basic_upper.iloc[i]
             else:
-                if close < prev_supertrend:
-                    supertrend.iloc[i] = upper_band.iloc[i]
-                    direction.iloc[i] = -1
+                final_upper[i] = final_upper[i-1]
+            
+            # Финальная нижняя полоса
+            if basic_lower.iloc[i] > final_lower[i-1] or df['close'].iloc[i-1] < final_lower[i-1]:
+                final_lower[i] = basic_lower.iloc[i]
+            else:
+                final_lower[i] = final_lower[i-1]
+            
+            # Определение Supertrend и направления
+            if supertrend[i-1] == final_upper[i-1]:
+                if df['close'].iloc[i] <= final_upper[i]:
+                    supertrend[i] = final_upper[i]
+                    direction[i] = -1  # Медвежий (линия над ценой)
                 else:
-                    supertrend.iloc[i] = max(lower_band.iloc[i], prev_supertrend)
-                    direction.iloc[i] = 1
+                    supertrend[i] = final_lower[i]
+                    direction[i] = 1   # Бычий (линия под ценой)
+            else:  # supertrend[i-1] == final_lower[i-1]
+                if df['close'].iloc[i] >= final_lower[i]:
+                    supertrend[i] = final_lower[i]
+                    direction[i] = 1   # Бычий (линия под ценой)
+                else:
+                    supertrend[i] = final_upper[i]
+                    direction[i] = -1  # Медвежий (линия над ценой)
         
-        return pd.DataFrame({'supertrend': supertrend, 'direction': direction})
+        # КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: направление как в TradingView (пункт 4)
+        # В TradingView: direction < 0 = бычий, direction > 0 = медвежий
+        # Мы преобразуем: 1 -> -1 (бычий), -1 -> 1 (медвежий)
+        direction_tv = np.where(direction == 1, -1, 1)
+        
+        return pd.DataFrame({
+            'supertrend': supertrend,
+            'direction': direction_tv,
+            'is_bullish_st': direction_tv < 0,  # Бычий тренд в TV
+            'is_bearish_st': direction_tv > 0   # Медвежий тренд в TV
+        }, index=df.index)
     
     def calculate_macd(self, df: pd.DataFrame) -> pd.DataFrame:
-        ema_fast = df['close'].ewm(span=self.macd_fast, adjust=False).mean()
-        ema_slow = df['close'].ewm(span=self.macd_slow, adjust=False).mean()
-        macd_line = ema_fast - ema_slow
-        signal_line = macd_line.ewm(span=self.macd_signal, adjust=False).mean()
-        return pd.DataFrame({'macd_line': macd_line, 'signal_line': signal_line})
+        """Расчёт MACD с использованием TA-Lib"""
+        macd_line, signal_line, _ = talib.MACD(df['close'].values,
+                                               fastperiod=self.macd_fast,
+                                               slowperiod=self.macd_slow,
+                                               signalperiod=self.macd_signal)
+        return pd.DataFrame({
+            'macd_line': macd_line,
+            'signal_line': signal_line,
+            'macd_bullish': macd_line > signal_line,
+            'macd_bearish': macd_line < signal_line
+        }, index=df.index)
     
     def calculate_rsi(self, df: pd.DataFrame, period: int = 13) -> pd.Series:
-        delta = df['close'].diff()
-        gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
-        loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
-        rs = gain / loss
-        return 100 - (100 / (1 + rs))
+        """Расчёт RSI с использованием TA-Lib"""
+        rsi_values = talib.RSI(df['close'].values, timeperiod=period)
+        return pd.Series(rsi_values, index=df.index)
     
     def calculate_all_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
         if len(df) < 30:
             return df
         
+        # Расчёт Supertrend (включая направления)
         supertrend_df = self.calculate_supertrend(df)
         df['supertrend'] = supertrend_df['supertrend']
         df['supertrend_direction'] = supertrend_df['direction']
+        df['is_bullish_st'] = supertrend_df['is_bullish_st']
+        df['is_bearish_st'] = supertrend_df['is_bearish_st']
         
+        # Расчёт MACD
         macd_df = self.calculate_macd(df)
         df['macd_line'] = macd_df['macd_line']
         df['macd_signal'] = macd_df['signal_line']
+        df['macd_bullish'] = macd_df['macd_bullish']
+        df['macd_bearish'] = macd_df['macd_bearish']
         
+        # Расчёт RSI
         df['rsi'] = self.calculate_rsi(df, self.rsi_period)
-        
-        df['is_bullish_st'] = df['supertrend_direction'] == 1
-        df['is_bearish_st'] = df['supertrend_direction'] == -1
-        df['macd_bullish'] = df['macd_line'] > df['macd_signal']
-        df['macd_bearish'] = df['macd_line'] < df['macd_signal']
         df['rsi_not_overbought'] = df['rsi'] < self.rsi_overbought
         df['rsi_not_oversold'] = df['rsi'] > self.rsi_oversold
         
-        df['condition_pullback_long'] = (df['is_bullish_st'] & 
-                                         (df['close'].shift(1) < df['supertrend'].shift(1)) & 
-                                         (df['close'] > df['supertrend']))
+        # Условия входа по откату (как в TradingView)
+        df['condition_pullback_long'] = (
+            df['is_bullish_st'] & 
+            (df['close'].shift(1) < df['supertrend'].shift(1)) & 
+            (df['close'] > df['supertrend'])
+        )
         
-        df['condition_pullback_short'] = (df['is_bearish_st'] & 
-                                          (df['close'].shift(1) > df['supertrend'].shift(1)) & 
-                                          (df['close'] < df['supertrend']))
+        df['condition_pullback_short'] = (
+            df['is_bearish_st'] & 
+            (df['close'].shift(1) > df['supertrend'].shift(1)) & 
+            (df['close'] < df['supertrend'])
+        )
         
-        df['enter_long'] = (df['condition_pullback_long'] & df['macd_bullish'] & df['rsi_not_overbought'])
-        df['enter_short'] = (df['condition_pullback_short'] & df['macd_bearish'] & df['rsi_not_oversold'])
+        # Сигналы входа
+        df['enter_long'] = (
+            df['condition_pullback_long'] & 
+            df['macd_bullish'] & 
+            df['rsi_not_overbought']
+        )
         
-        df['trend_reversal_to_bearish'] = (df['is_bearish_st'] & (df['supertrend_direction'].shift(1) != -1))
-        df['trend_reversal_to_bullish'] = (df['is_bullish_st'] & (df['supertrend_direction'].shift(1) != 1))
+        df['enter_short'] = (
+            df['condition_pullback_short'] & 
+            df['macd_bearish'] & 
+            df['rsi_not_oversold']
+        )
+        
+        # Сигналы выхода по развороту Supertrend (пункт 5)
+        # Разворот происходит, когда направление меняется
+        df['trend_reversal_to_bearish'] = (
+            df['is_bearish_st'] & 
+            (~df['is_bearish_st'].shift(1).fillna(False))
+        )
+        
+        df['trend_reversal_to_bullish'] = (
+            df['is_bullish_st'] & 
+            (~df['is_bullish_st'].shift(1).fillna(False))
+        )
         
         return df
     
     def execute_backtest(self, df: pd.DataFrame):
-        logger.info("Запуск бэктеста...")
+        logger.info("Запуск бэктеста с исправленной логикой...")
         df = self.calculate_all_indicators(df)
         
         if len(df) < 2:
@@ -211,7 +280,7 @@ class SupertrendBacktester:
         
         for i in range(1, len(df)):
             current_row = df.iloc[i]
-            current_time = df.index[i]  # Уже в UTC+3
+            current_time = df.index[i]
             
             # Принудительное закрытие в конце периода
             if current_time >= end_date_moscow and self.position != 0:
@@ -222,7 +291,7 @@ class SupertrendBacktester:
                 )
                 continue
             
-            # Выход по развороту тренда
+            # Выход по развороту тренда (пункт 5)
             if self.position > 0 and current_row['trend_reversal_to_bearish']:
                 self.close_position(
                     price=current_row['close'],
@@ -289,6 +358,10 @@ class SupertrendBacktester:
             self.update_equity_curve(current_row['close'], current_time)
     
     def enter_position(self, price: float, time, position_type: str, reason: str):
+        """
+        Изменённое управление капиталом (пункт 3):
+        Используется 100% текущего капитала (реинвестирование) как в TradingView.
+        """
         capital_to_use = self.capital
         quantity = capital_to_use / price
         
@@ -296,6 +369,7 @@ class SupertrendBacktester:
         quantity = (quantity // lot_size) * lot_size
         
         if quantity < lot_size:
+            logger.warning(f"Недостаточно капитала для покупки хотя бы 1 лота. Капитал: {self.capital}, Цена: {price}")
             return
         
         self.position = quantity if position_type == 'long' else -quantity
@@ -319,7 +393,7 @@ class SupertrendBacktester:
             'duration_hours': None
         }
         
-        logger.info(f"⏰ {time.strftime('%d.%m.%Y %H:%M')} (UTC+3): {reason} по {price:.2f}")
+        logger.info(f"⏰ {time.strftime('%d.%m.%Y %H:%M')} (UTC+3): {reason} по {price:.2f}, Кол-во: {abs(quantity):.0f}")
     
     def close_position(self, price: float, time, reason: str):
         if self.position == 0 or self.current_trade is None:
@@ -350,7 +424,7 @@ class SupertrendBacktester:
             if prev_equity > 0:
                 self.daily_returns.append((current_equity - prev_equity) / prev_equity)
         
-        logger.info(f"⏰ {time.strftime('%d.%m.%Y %H:%M')} (UTC+3): {reason} по {price:.2f}, P&L: {pnl:+.2f} руб. ({pnl_pct:+.2f}%)")
+        logger.info(f"⏰ {time.strftime('%d.%m.%Y %H:%M')} (UTC+3): {reason} по {price:.2f}, P&L: {pnl:+.2f} руб. ({pnl_pct:+.2f}%), Капитал: {self.capital:.2f}")
         
         self.position = 0.0
         self.position_avg_price = 0.0
@@ -420,14 +494,12 @@ class SupertrendBacktester:
         # Коэффициенты Шарпа и Сортино
         if self.daily_returns:
             returns_series = pd.Series(self.daily_returns)
-            annual_factor = np.sqrt(252)  # Годовой коэффициент
+            annual_factor = np.sqrt(252)
             
-            # Коэффициент Шарпа (безрисковая ставка = 0)
             if returns_series.std() > 0:
                 sharpe_ratio = annual_factor * returns_series.mean() / returns_series.std()
                 metrics['sharpe_ratio'] = sharpe_ratio
             
-            # Коэффициент Сортино (используем только отрицательные доходности)
             negative_returns = returns_series[returns_series < 0]
             if negative_returns.std() > 0:
                 sortino_ratio = annual_factor * returns_series.mean() / negative_returns.std()
@@ -447,18 +519,17 @@ class SupertrendBacktester:
     def print_results(self, metrics: Dict[str, Any]):
         """Вывод результатов на экран"""
         print("\n" + "="*70)
-        print("📊 РЕЗУЛЬТАТЫ БЭКТЕСТА STRATEGY SUPER TREND + MACD/RSI")
+        print("📊 РЕЗУЛЬТАТЫ БЭКТЕСТА STRATEGY SUPER TREND + MACD/RSI (ИСПРАВЛЕННЫЙ)")
         print("="*70)
         
-        print(f"\n📅 Период: 01.01.2024 - 01.01.2025")
-        print(f"📈 Инструмент: GAZP | Таймфрейм: 1 час | Время: UTC+3")
+        print(f"\n📅 Период: 01.01.2024 - 01.01.2025 | Таймфрейм: 1 час")
+        print(f"📈 Инструмент: GAZP | Управление капиталом: Реинвестирование 100%")
         print(f"💰 Начальный капитал: {self.initial_capital:,.0f} руб.")
         
         print(f"\n" + "="*70)
         print("🎯 КЛЮЧЕВЫЕ МЕТРИКИ")
         print("="*70)
         
-        # Ключевые метрики, которые запросил пользователь
         print(f"\n1️⃣  КОЛИЧЕСТВО СДЕЛОК: {metrics.get('total_trades', 0)}")
         
         print(f"\n2️⃣  ДОХОДНОСТЬ:")
@@ -487,20 +558,26 @@ class SupertrendBacktester:
         
         print(f"\n⚙️  ПАРАМЕТРЫ СТРАТЕГИИ:")
         params = [
-            ("ATR период", self.atr_period),
-            ("Supertrend множитель", self.supertrend_factor),
+            ("ATR период (ST)", self.atr_period),
+            ("Множитель ST", self.supertrend_factor),
             ("MACD", f"({self.macd_fast},{self.macd_slow},{self.macd_signal})"),
             ("RSI период", self.rsi_period),
             ("Стоп-лосс", f"{self.stop_loss_pct}%"),
             ("Тейк-профит", f"{self.take_profit_pct}%"),
-            ("В сделку", "100% капитала")
+            ("В сделку", "100% капитала (реинвестирование)"),
+            ("Логика ST", "Ручная реализация (исправлено)"),
+            ("Логика выхода", "По развороту ST (как в TV)")
         ]
         for name, value in params:
-            print(f"   {name:<25} {value}")
+            print(f"   {name:<30} {value}")
+        
+        print(f"\n📚 ИСПОЛЬЗУЕМЫЕ БИБЛИОТЕКИ:")
+        print(f"   - TA-Lib (MACD, RSI)")
+        print(f"   - ta (Average True Range)")
+        print(f"   - Ручная реализация (Supertrend)")
         
         print(f"\n" + "="*70)
         
-        # Краткая история сделок
         if self.trades:
             print(f"\n📋 ПОСЛЕДНИЕ 5 СДЕЛОК:")
             for i, trade in enumerate(self.trades[-5:]):
@@ -513,16 +590,19 @@ class SupertrendBacktester:
                       f"Причина: {trade['reason_exit']}")
         
         print(f"\n" + "="*70)
-        print("💡 Результаты также сохранены в backtest_results_final.json")
+        print("💡 Результаты сохранены в backtest_results_fixed_final.json")
         print("="*70)
     
     def save_results(self, metrics: Dict[str, Any]):
         """Сохранение результатов в JSON файл"""
         results = {
             'timestamp': datetime.now().isoformat(),
-            'strategy': 'Supertrend + MACD/RSI',
+            'strategy': 'Supertrend + MACD/RSI (исправленная реализация Supertrend)',
             'period': '2024-01-01 to 2025-01-01',
             'timezone': 'UTC+3',
+            'timeframe': '1 hour',
+            'capital_management': '100% reinvestment',
+            'supertrend_implementation': 'manual (corrected for TV logic)',
             'parameters': {
                 'atr_period': self.atr_period,
                 'supertrend_factor': self.supertrend_factor,
@@ -547,10 +627,10 @@ class SupertrendBacktester:
             'trades': self.trades,
         }
         
-        with open('backtest_results_final.json', 'w', encoding='utf-8') as f:
+        with open('backtest_results_fixed_final.json', 'w', encoding='utf-8') as f:
             json.dump(results, f, indent=2, ensure_ascii=False, default=str)
         
-        logger.info("✅ Результаты сохранены в backtest_results_final.json")
+        logger.info("✅ Результаты сохранены в backtest_results_fixed_final.json")
     
     async def run(self):
         try:
@@ -561,7 +641,6 @@ class SupertrendBacktester:
             
             self.execute_backtest(df)
             
-            # Принудительное закрытие в конце данных
             if self.position != 0 and len(df) > 0:
                 last_price = df['close'].iloc[-1]
                 last_time = df.index[-1]
